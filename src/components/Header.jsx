@@ -1,13 +1,18 @@
 
-import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from "react-router-dom"; //importing from react-router-dom
 
 export default function Header() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  function pathMatchRout(route){
-    return (route === location.pathname) ? true : false //ternary conditional statement
+  const location = useLocation(); //useLocation helps to point to the exact location of the route
+  const navigate = useNavigate(); //useNavigate is builtin function that helps us navigate through routes
+  function pathMatchRoute(route){
+    //checks if the route is strictly equal the matching route
+    if(route === location.pathname) {
+      //location.pathname points to the route name
+      return true;
+    } 
   }
+  console.log(location.pathname);
+
   return (
     <div className="bg-white border-b shadow-sm sticky top-0 z-50">
       <header className="flex justify-between items-center px-3 max-w-6xl">
@@ -22,25 +27,25 @@ export default function Header() {
         <div>
           <ul className="flex space-x-10">
             <li
-              className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent 
-              ${pathMatchRout("/") && "text-black border-b-red-500"}`}
+              className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
+                pathMatchRoute("/") && "!text-black !border-b-red-500"
+              }`} //added ! to every attribute after && to make sure that those styles are used, ! means IMPORTANT!!!
               onClick={() => navigate("/")}
             >
               Home
             </li>
             <li
-              className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent 
-              ${pathMatchRout("/offer") && "text-black border-b-red-500"}`}
-              onClick={() => navigate("/offer")}
+              className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
+                pathMatchRoute("/offers") && "!text-black !border-b-red-500"
+              }`} //added ! to every attribute after && to make sure that those styles are used, ! means IMPORTANT!!!
+              onClick={() => navigate("/offers")}
             >
               Offers
             </li>
             <li
-              className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent 
-              ${
-                pathMatchRout("/sign-in") &&
-                "text-black border-b-red-500 font-bold"
-              }`}
+              className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
+                pathMatchRoute("/sign-in") && "!text-black !border-b-red-500"
+              }`} //added ! to every attribute after && to make sure that those styles are used, ! means IMPORTANT!!!
               onClick={() => navigate("/sign-in")}
             >
               Sign in
