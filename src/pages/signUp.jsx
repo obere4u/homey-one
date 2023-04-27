@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import OAuth from "../components/OAuth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { db } from "../firebase";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false); //showPassword is a hook and we set the useState to false so that the password will be hidden by default
@@ -21,6 +23,19 @@ export default function SignUp() {
     }));
   }
 
+  function onSubmit(e) {
+    e.preventDefault();
+
+    try {
+      const auth = getAuth();
+      const userCredential = createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user
+    } catch (error) {
+      console.log(error)
+    }
+    
+  }
+
   return (
     <section>
       <h1 className="tracking-widest text-3xl text-center mt-8 font-bold ">
@@ -35,13 +50,14 @@ export default function SignUp() {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[45%] lg:ml-20">
-          <form className="md:mt-10">
+          <form onSubmit={onSubmit}>
             <input
               type="text"
               id="username"
               value={username}
               onChange={onChange}
               placeholder="Username"
+              aria-required
               className="w-full px-4 py-2 text-large text-gray-700 bg-white border-gray-300 rounded-md transition ease-in-out mb-6"
             />
             <input
@@ -50,6 +66,7 @@ export default function SignUp() {
               value={email}
               onChange={onChange}
               placeholder="Username/Email-address"
+              aria-required
               className="w-full px-4 py-2 text-large text-gray-700 bg-white border-gray-300 rounded-md transition ease-in-out mb-6"
             />
             {/*onChange is an eventListener that listens when something changes like typing something in a form field */}
@@ -60,6 +77,7 @@ export default function SignUp() {
                 placeholder="password"
                 value={password}
                 onChange={onChange}
+                aria-required
                 className="w-full px-4 py-2 text-large text-gray-700 bg-white border-gray-300 rounded-md"
               />
               {showPassword ? (

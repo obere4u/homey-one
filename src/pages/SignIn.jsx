@@ -34,7 +34,7 @@ export default function SignIn() {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[45%] lg:ml-20">
-          <form className="md:mt-10">
+          <form>
             <input
               type="email"
               id="email"
@@ -69,7 +69,7 @@ export default function SignIn() {
             </div>
             <div className="flex justify-between whitespace-nowrap px-3 text-sm sm:text-lg">
               <p>
-                Don't have an account?
+                {`Don't have an account?`}
                 <Link
                   to={"/sign-up"}
                   className="text-red-600 font-semibold ml-2 py-1 border-b-[2px] border-transparent hover:opacity-[0.8] cursor-pointer hover:border-b-red-500 transition duration-150 ease-in-out"
