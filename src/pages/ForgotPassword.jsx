@@ -1,24 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import OAuth from "../components/OAuth";
 
 export default function ForgotPassword() {
-  const [showPassword, setShowPassword] = useState(false); //showPassword is a hook and we set the useState to false so that the password will be hidden by default
-  const [formData, setFormData] = useState({
-    //hook that will cover the username, email, password etc
-    username: "",
-    email: "",
-    password: "",
-  });
-  // no access to those formData so we need to destructure it like this
-  const { email } = formData;
+
+  const [email, setEmail] = useState("");
 
   function onChange(e) {
-    setFormData((prevState) => ({
-      ...prevState /*prevState keeps the record of previous state and ...prevState will help us append things to the previous state*/,
-      [e.target.id]: e.target.value,
-    }));
+    setEmail(e.target.value);
   }
 
   return (
@@ -42,9 +31,29 @@ export default function ForgotPassword() {
               value={email}
               onChange={onChange}
               placeholder="Email-address"
+              aria-required
               className="w-full px-4 py-2 text-large text-gray-700 bg-white border-gray-300 rounded-md transition ease-in-out mb-6"
             />
             {/*onChange is an eventListener that listens when something changes like typing something in a form field */}
+            <div className="flex justify-between whitespace-nowrap px-3 text-sm sm:text-lg">
+              <p>
+                Don't have an account?
+                <Link
+                  to={"/sign-up"}
+                  className="text-red-600 font-semibold ml-2 py-1 border-b-[2px] border-transparent hover:opacity-[0.8] cursor-pointer hover:border-b-red-500 transition duration-150 ease-in-out"
+                >
+                  Sign Up
+                </Link>
+              </p>
+              <p>
+                <Link
+                  to={"/sign-in"}
+                  className="text-blue-600 font-semibold ml-2 py-1 border-b-[2px] border-transparent hover:opacity-[0.8] cursor-pointer hover:border-b-blue-500 transition duration-150 ease-in-out"
+                >
+                  Sign In
+                </Link>
+              </p>
+            </div>
             <button
               type="submit"
               className="w-full bg-blue-500 text-white px-5 py-3 mt-6 tx-sm font-medium uppercase cursor-pointer hover:opacity-90 transition duration-150 ease-in-out rounded-lg shadow-md hover:shadow-lg active:bg-blue-700"

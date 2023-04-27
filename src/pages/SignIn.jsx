@@ -41,6 +41,7 @@ export default function SignIn() {
               value={email}
               onChange={onChange}
               placeholder="Username/Email-address"
+              aria-required
               className="w-full px-4 py-2 text-large text-gray-700 bg-white border-gray-300 rounded-md transition ease-in-out mb-6"
             />
             {/*onChange is an eventListener that listens when something changes like typing something in a form field */}
@@ -49,6 +50,7 @@ export default function SignIn() {
                 type={showPassword ? "text" : "password"}
                 id="password"
                 placeholder="password"
+                aria-required
                 value={password}
                 onChange={onChange}
                 className="w-full px-4 py-2 text-large text-gray-700 bg-white border-gray-300 rounded-md"
@@ -67,7 +69,7 @@ export default function SignIn() {
             </div>
             <div className="flex justify-between whitespace-nowrap px-3 text-sm sm:text-lg">
               <p>
-                Dont have an account?
+                Don't have an account?
                 <Link
                   to={"/sign-up"}
                   className="text-red-600 font-semibold ml-2 py-1 border-b-[2px] border-transparent hover:opacity-[0.8] cursor-pointer hover:border-b-red-500 transition duration-150 ease-in-out"
@@ -84,14 +86,19 @@ export default function SignIn() {
                 </Link>
               </p>
             </div>
-            <button type="submit" className='w-full bg-blue-500 text-white px-5 py-3 mt-6 tx-sm font-medium uppercase cursor-pointer hover:opacity-90 transition duration-150 ease-in-out rounded-lg shadow-md hover:shadow-lg active:bg-blue-700'>Sign In</button>
-            <div className='flex items-center my-4 before:flex-1 before:border-t border-gray-400 after:flex-1 after:border-t after-gray-400'>
-              <p className='text-center font-semibold mx-4'>OR</p>
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white px-5 py-3 mt-6 tx-sm font-medium uppercase cursor-pointer hover:opacity-90 transition duration-150 ease-in-out rounded-lg shadow-md hover:shadow-lg active:bg-blue-700"
+            >
+              Sign In
+            </button>
+            <div className="flex items-center my-4 before:flex-1 before:border-t border-gray-400 after:flex-1 after:border-t after-gray-400">
+              <p className="text-center font-semibold mx-4">OR</p>
             </div>
             <OAuth />
           </form>
-          </div>
         </div>
+      </div>
     </section>
   );
 }
