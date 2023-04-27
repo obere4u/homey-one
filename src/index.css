@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* You can add the css styles that have no equivalent style */
+/* tailwindcss have a plugin for forms */
+
+body {
+    background-color: #86ddec0c;
+}
