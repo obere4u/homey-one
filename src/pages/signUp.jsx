@@ -1,37 +1,84 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import OAuth from "../components/OAuth";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { db } from "../firebase";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false); //showPassword is a hook and we set the useState to false so that the password will be hidden by default
   const [formData, setFormData] = useState({
     //hook that will cover the username, email, password etc
-    username: "",
+    name: "",
     email: "",
     password: "",
   });
   // no access to those formData so we need to destructure it like this
-  const { username, email, password } = formData;
+  const { name, email, password } = formData;
+  const navigate = useNavigate();
 
+  function errorMessage(error) {
+    switch (error.code) {
+      case "auth/invalid-email":
+        return "Invalid email address";
+
+      case "auth/weak-password":
+        return "Password should be at least 6 characters long";
+
+      case "auth/email-already-in-use":
+        return "The email address is already in use by another account";
+
+      case "auth/missing-email":
+        return "Please enter your Email Address";
+
+      case "auth/invalid-display-name":
+        return "Missing Name";
+
+      case "auth/missing-password":
+        return "Please enter your Password";
+
+      case "auth/invalid-password":
+        return "Incorrect Password";
+
+      default:
+        return "Something went wrong with registration";
+    }
+  }
   function onChange(e) {
     setFormData((prevState) => ({
       ...prevState /*prevState keeps the record of previous state and ...prevState will help us append things to the previous state*/,
       [e.target.id]: e.target.value,
     }));
   }
-
-  function onSubmit(e) {
+  //auth the user and navigate to homepage
+  async function onSubmit(e) {
     e.preventDefault();
-
+    if (name === "") {
+      toast.error("Please enter your name")
+      return
+    }
+    //trycatch() is modern way of trowing and catching error
     try {
       const auth = getAuth();
-      const userCredential = createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log(user);
+      updateProfile(auth.currentUser, {
+        displayName: name
+      })
+      const formDataCopy = {...formData};
+      delete formDataCopy.password;
+      formDataCopy.timestamp = serverTimestamp();
+      await setDoc(doc(db, "users", user.uid), formDataCopy);
+      toast.success("Sign Up successful")
+      navigate("/"); 
     } catch (error) {
-      console.log(error)
+      console.log(error.code);
+      const errorMessageString = errorMessage(error);
+      toast.error(errorMessageString);
+      
     }
     
   }
@@ -53,11 +100,12 @@ export default function SignUp() {
           <form onSubmit={onSubmit}>
             <input
               type="text"
-              id="username"
-              value={username}
+              id="name"
+              value={name}
               onChange={onChange}
-              placeholder="Username"
+              placeholder="Name"
               aria-required
+              // required
               className="w-full px-4 py-2 text-large text-gray-700 bg-white border-gray-300 rounded-md transition ease-in-out mb-6"
             />
             <input
@@ -65,8 +113,9 @@ export default function SignUp() {
               id="email"
               value={email}
               onChange={onChange}
-              placeholder="Username/Email-address"
+              placeholder="Email-address"
               aria-required
+              // required
               className="w-full px-4 py-2 text-large text-gray-700 bg-white border-gray-300 rounded-md transition ease-in-out mb-6"
             />
             {/*onChange is an eventListener that listens when something changes like typing something in a form field */}
@@ -78,6 +127,7 @@ export default function SignUp() {
                 value={password}
                 onChange={onChange}
                 aria-required
+                // required
                 className="w-full px-4 py-2 text-large text-gray-700 bg-white border-gray-300 rounded-md"
               />
               {showPassword ? (
