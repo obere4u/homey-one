@@ -1,7 +1,10 @@
 
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom"; //importing from react-router-dom
+import SignUp from "../pages/SignUp";
 
 export default function Header() {
+  const [isVisible, showSignUp] = useState(false)
   const location = useLocation(); //useLocation helps to point to the exact location of the path(route)
   const navigate = useNavigate(); //useNavigate is builtin function that helps us navigate inside the website
   function pathMatchRoute(route){
@@ -12,8 +15,10 @@ export default function Header() {
     } 
   }
 
+    
+
   return (
-    <div className="bg-white border-b shadow-sm sticky top-0 z-50">
+    <div className="bg-white border-b shadow-sm  top-0 z-50">
       <header className="flex justify-between items-center pl-3 max-w-6xl">
         <div>
           <img
@@ -33,6 +38,7 @@ export default function Header() {
             >
               Home
             </li>
+
             <li
               className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent hover:border-b-red-500 hover:text-gray-500  focus:text-gray-500 ${
                 pathMatchRoute("/offers") && "!text-black !border-b-red-500"
@@ -41,6 +47,7 @@ export default function Header() {
             >
               Offers
             </li>
+
             <li
               className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent hover:border-b-red-500 hover:text-gray-500  focus:text-gray-500 ${
                 pathMatchRoute("/sign-in") && "!text-black !border-b-red-500"
@@ -49,8 +56,20 @@ export default function Header() {
             >
               Sign in
             </li>
+
+            <li
+              className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent hover:border-b-red-500 hover:text-gray-500  focus:text-gray-500 ${
+                pathMatchRoute("/sign-in") && "!text-black !border-b-red-500"
+              }`} //added ! to every attribute after && to make sure that those styles are used, ! means IMPORTANT!!!
+            >
+              Sign Up
+            </li>
           </ul>
         </div>
+        <SignUp
+          isVisible={false}
+          onClick={() => (showSignUp = true)}
+        />
       </header>
     </div>
   );
