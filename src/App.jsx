@@ -14,9 +14,9 @@ import "react-toastify/dist/ReactToastify.css";
 function App() {
   return (
     <>
-      <Router>
-        
-
+    <Router>
+    
+      <Header />
         <Routes>
           <Route
             path="/"
