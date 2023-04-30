@@ -1,15 +1,8 @@
 
-import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom"; //importing from react-router-dom
-import SignUp from "../pages/SignUp";
-
-
 
 export default function Header() {
-
-   const [showModal, setShowModal] = useState(false);
-
-  const location = useLocation(); {/* useLocation helps to point to the exact location of the path(route) */}
+  const location = useLocation(); //useLocation helps to point to the exact location of the path(route)
   const navigate = useNavigate(); //useNavigate is builtin function that helps us navigate inside the website
   function pathMatchRoute(route){
     //checks if the route is strictly equal the matching route
@@ -19,17 +12,10 @@ export default function Header() {
     } 
   }
 
-  
+    
 
-  
   return (
     <div className="bg-white border-b shadow-sm  top-0 z-50">
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <SignUp onClose={() => setShowModal(false)} />
-        </div>
-      )}
-
       <header className="flex justify-between items-center pl-3 max-w-6xl">
         <div>
           <img
@@ -72,7 +58,7 @@ export default function Header() {
               className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent hover:border-b-red-500 hover:text-gray-500  focus:text-gray-500 ${
                 pathMatchRoute("/sign-up") && "!text-black !border-b-red-500"
               }`} //added ! to every attribute after && to make sure that those styles are used, ! means IMPORTANT!!!
-              onClick={() => setShowModal(true)}
+              onClick={() => navigate("/sign-up")}
             >
               Sign Up
             </li>
@@ -81,6 +67,5 @@ export default function Header() {
       </header>
     </div>
   );
-
 }
 
