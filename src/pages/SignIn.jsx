@@ -1,9 +1,37 @@
 import React, { useState } from 'react'
+import OAuth  from '../components/OAuth';
 import { Link } from 'react-router-dom';
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
-import OAuth from '../components/OAuth';
+import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignIn() {
+
+  
+
+  function errorMessage(error) {
+    switch (error.code) {
+      case "auth/invalid-email":
+        return "Invalid email address";
+
+      case "auth/email-already-in-use":
+        return "The email address is already in use by another account";
+
+      case "auth/missing-email":
+        return "Please enter your Email Address";
+
+      case "auth/missing-password":
+        return "Please enter your Password";
+
+      case "auth/invalid-password":
+        return "Incorrect Password";
+
+      default:
+        return "Invalid Email or password";
+    }
+  }
+
   const [showPassword, setShowPassword] = useState(false); //showPassword is a hook and we set the useState to false so that the password will be hidden by default
   const [formData, setFormData] = useState({
     //hook that will cover the email, password etc
@@ -12,12 +40,29 @@ export default function SignIn() {
   });
   // no access to those formData so we need to destructure it like this
   const { email, password } = formData;
+  const navigate = useNavigate();
 
   function onChange(e) {
     setFormData((prevState) => ({
        ...prevState, /*prevState keeps the record of previous state and ...prevState will help us append things to the previous state*/
        [e.target.id]: e.target.value,
     }))
+  }
+
+  async function onSubmit(e) {
+    e.preventDefault();
+    try {
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+      if(userCredential.user) {
+        navigate("/");
+      }
+      
+    } catch (error) {
+      const errorMessageString = errorMessage(error);
+      toast.error(errorMessageString);
+    }
   }
 
   return (
@@ -34,7 +79,7 @@ export default function SignIn() {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[45%] lg:ml-20">
-          <form>
+          <form onSubmit={onSubmit}>
             <input
               type="email"
               id="email"
@@ -67,7 +112,7 @@ export default function SignIn() {
                 />
               )}
             </div>
-            <div className="flex justify-between whitespace-nowrap px-3 text-sm sm:text-lg">
+            <div className="flex justify-between whitespace-wrap px-3 text-sm sm:text-lg">
               <p>
                 {`Don't have an account?`}
                 <Link
