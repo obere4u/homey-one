@@ -10,5 +10,5 @@ export default function PrivateRoute() {
       /*  you can add spinner effects here, this makes sure that the page doesn't return anything until check is completed */
     }
   }
-  return loggedIn ? <Outlet /> : <Navigate to="/signed-in/" />
+  return loggedIn ? <Outlet /> : <Navigate to="/sign-in/" />
 }
