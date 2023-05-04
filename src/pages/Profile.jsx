@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { updateProfile } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
-import  db  from '../firebase';
+import { db } from '../firebase';
 import { toast } from 'react-toastify'
 
 export default function Profile() {
@@ -28,26 +28,34 @@ function onChange(e) {
   }));
 }
 
-async function onSubmit() {
-  try {
-    if (auth.currentUser.displayName !== name) {
-      //Update Display Name in firebase auth
-      await updateProfile(auth.currentUser, {
-        displayName: name,
-      });
+  async function onSubmit() {
+    const prevName = auth.currentUser.displayName;
+    try {
+      if (prevName !== name) {
+        //Update Display Name in firebase auth
+        await updateProfile(auth.currentUer, {
+          displayName: name,
+        });
 
-      //Update name in DataBase (firebase)
-      const docRef = doc(db, "users", auth.currentUser.uid)
-      await updateDoc(docRef, {
-        name
-      })
+        //Update name in DataBase (firebase)
+        const docRef = doc(db, "users", auth.currentUser.uid);
+        await updateDoc(docRef, {
+          name,
+        });
+      
+        
+
+      }
+      toast.success("Profile Update Successful");
+    } catch (error) {
+      toast.error("Could not Update Profile details");
+      // Revert name in the form to the previous name
+      setFormData((prevState) => ({
+        ...prevState,
+        name: prevName,
+      }));
     }
-    toast.success("Profile Update Successful");
-  } catch (error) {
-    toast.error("Could not Update Profile details")
-
   }
-}
 
 
   return (
