@@ -1,9 +1,24 @@
 
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom"; //importing from react-router-dom
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 export default function Header() {
+  const [pageState, setPageState] = useState("Sign In")
   const location = useLocation(); //useLocation helps to point to the exact location of the path(route)
   const navigate = useNavigate(); //useNavigate is builtin function that helps us navigate inside the website
+  const auth = getAuth();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+       setPageState("Profile")
+      } else {
+        setPageState("Sign In")
+     }
+   })
+  }, [auth]);
+
   function pathMatchRoute(route){
     //checks if the route is strictly equal the matching route
     if(route === location.pathname) {
@@ -47,21 +62,21 @@ export default function Header() {
 
             <li
               className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent hover:border-b-red-500 hover:text-gray-500  focus:text-gray-500 ${
-                pathMatchRoute("/sign-in") && "!text-black !border-b-red-500"
+                (pathMatchRoute("/sign-in") || pathMatchRoute("/profile")) && "!text-black !border-b-red-500"
               }`} //added ! to every attribute after && to make sure that those styles are used, ! means IMPORTANT!!!
-              onClick={() => navigate("/sign-in")}
+              onClick={() => navigate("/profile")}
             >
-              Sign in
+              {pageState}
             </li>
 
-            <li
+            {/* <li
               className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent hover:border-b-red-500 hover:text-gray-500  focus:text-gray-500 ${
-                pathMatchRoute("/sign-up") && "!text-black !border-b-red-500"
+                pathMatchRoute("/sign-up")  && "!text-black !border-b-red-500"
               }`} //added ! to every attribute after && to make sure that those styles are used, ! means IMPORTANT!!!
               onClick={() => navigate("/sign-up")}
             >
               Sign Up
-            </li>
+            </li> */}
           </ul>
         </div>
       </header>

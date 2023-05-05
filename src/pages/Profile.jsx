@@ -33,7 +33,7 @@ function onChange(e) {
     try {
       if (prevName !== name) {
         //Update Display Name in firebase auth
-        await updateProfile(auth.currentUer, {
+        await updateProfile(auth.currentUser, {
           displayName: name,
         });
 
@@ -42,11 +42,9 @@ function onChange(e) {
         await updateDoc(docRef, {
           name,
         });
-      
-        
-
       }
       toast.success("Profile Update Successful");
+
     } catch (error) {
       toast.error("Could not Update Profile details");
       // Revert name in the form to the previous name
