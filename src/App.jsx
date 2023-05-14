@@ -31,7 +31,8 @@ function App() {
               path="/profile"
               element={<Profile />}
             />
-          </Route> {/* secures the profile path */}
+          </Route>
+          {/* secures the profile path */}
           <Route
             path="/sign-in"
             element={<SignIn />}
@@ -51,8 +52,14 @@ function App() {
           />
           <Route
             path="/create-listing"
-            element={<CreateListing />}
-          />
+            element={<PrivateRoute />}
+          >
+            <Route
+              path="/create-listing"
+              element={<CreateListing />}
+            />
+          </Route>
+          {/* secures the create listing  path */}
         </Routes>
       </Router>
       <ToastContainer

@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Spinner from "../components/Spinner"
+import { toast } from "react-toastify"
+
+
 
 function CreateListing() {
+  const [geolocationEnabled, setGeolocationEnabled] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     type: "rent",
     name: "",
@@ -13,6 +19,9 @@ function CreateListing() {
     offer: false,
     regularPrice: 0,
     discountPrice: 0,
+    images: {},
+    latitude: 0,
+    longitude: 0,
   });
   const {
     type,
@@ -25,19 +34,90 @@ function CreateListing() {
     description,
     offer,
     regularPrice,
-    discountPrice
+    discountPrice,
+    images,
+    latitude,
+    longitude
   } = formData;
 
-  function onChange() {
-    console.log("buy");
+  //Load saved formData
+  useEffect(() => {
+    const savedFormData = JSON.parse(localStorage.getItem('formData'));
+    if (savedFormData) {
+      setFormData(savedFormData)
+    }
+  }, []);
+
+  //Save formData
+  useEffect(() => {
+    localStorage.setItem('formData', JSON.stringify(formData));
+  }, [formData])
+
+
+  function onChange(e) {
+    let boolean = null;
+
+    //true
+    if (e.target.value === "true") {
+      boolean = true;
+    }
+    //false
+    if (e.target.value === "false") {
+      boolean = false;
+    }
+
+    //images
+    if (e.target.files) {
+      setFormData((prevState) => ({
+        ...prevState,
+        images: e.target.files,
+      }));
+    }
+    //text/boolean/number
+    if (!e.target.files) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [e.target.id]: boolean !== null ? boolean : e.target.value, //want to check if null true or false
+      }));
+    }
+    
+  }
+
+  async function onSubmit(e) {
+    e.preventDefault();
+    setLoading(true)
+    if (discountPrice >= regularPrice) {
+      setLoading(false);
+      toast.error("Discounted Price needs to be less than Regular Price")
+      return
+    }
+
+    if (images.length > 6) {
+      setLoading(false);
+      toast.error("Maximum 6 images are required")
+      return
+    }
+
+    let geolocation = {};
+    let location;
+    
+    if (geolocationEnabled) {
+      const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address${address}&key=${process.env.REACT_API_GOOGLE_API_KEY}`);
+
+      const data = await response.json();
+    }
+  }
+
+  if (loading) {
+    return <Spinner />;
   }
 
   return (
     <main className="max-w-md px-2 mx-auto">
-      <h1 className="text-3xl text-center mt-6 font-bold ">Create a Listing</h1>
-      <form>
-        <p className="text-lg mt-6 font-semibold">Sell or Rent</p>
-        <div className="flex justify-between gap-3">
+      <h1 className="text-3xl text-center font-bold mb-6">Create a Listing</h1>
+      <form onSubmit={onSubmit}>
+        <label className="text-lg font-semibold">Sell / Rent</label>
+        <div className="flex justify-between gap-3 mb-6">
           <button
             type="button"
             id="type"
@@ -67,13 +147,13 @@ function CreateListing() {
           </button>
         </div>
 
-        <p className="text-lg mt-6 font-semibold">Name</p>
+        <label className="text-lg font-semibold">Name</label>
         <input
           type="text"
           name="name"
           id="name"
           value={name}
-          onChange={onchange}
+          onChange={onChange}
           placeholder="Name"
           maxLength="32"
           minLength="10"
@@ -84,13 +164,13 @@ function CreateListing() {
 
         <div className="flex justify-between mb-6">
           <div>
-            <p className="text-lg font-semibold">Beds</p>
+            <label className="text-lg font-semibold">Beds</label>
             <input
               type="number"
               name="bedrooms"
               id="bedrooms"
               value={bedrooms}
-              onchange={onChange}
+              onChange={onChange}
               min="1"
               max="50"
               required
@@ -100,13 +180,13 @@ function CreateListing() {
           </div>
 
           <div>
-            <p className="text-lg font-semibold">Baths</p>
+            <label className="text-lg font-semibold">Baths</label>
             <input
               type="number"
               name="bathrooms"
               id="bathrooms"
               value={bathrooms}
-              onchange={onChange}
+              onChange={onChange}
               min="1"
               max="50"
               required
@@ -116,11 +196,11 @@ function CreateListing() {
           </div>
         </div>
 
-        <p className="text-lg mt-6 font-semibold">Parking Spot</p>
-        <div className="flex justify-between gap-3">
+        <label className="text-lg font-semibold">Parking Spot</label>
+        <div className="flex justify-between gap-3 mb-6">
           <button
             type="button"
-            id="type"
+            id="parking"
             value={true}
             onClick={onChange}
             className={`px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-150 ease-in-out w-full ${
@@ -143,15 +223,15 @@ function CreateListing() {
           </button>
         </div>
 
-        <p className="text-lg mt-6 font-semibold">Furnished</p>
-        <div className="flex justify-between gap-3">
+        <label className="text-lg font-semibold">Furnished</label>
+        <div className="flex justify-between gap-3 mb-6">
           <button
             type="button"
             id="furnished"
             value={true}
             onClick={onChange}
             className={`px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-150 ease-in-out w-full ${
-              furnished ? "bg-white text-black" : "!bg-slate-600 text-white"
+              !furnished ? "bg-white text-black" : "!bg-slate-600 text-white"
             }`}
           >
             Yes
@@ -163,44 +243,58 @@ function CreateListing() {
             value={false}
             onClick={onChange}
             className={`px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-150 ease-in-out w-full ${
-              !furnished ? "bg-white text-black" : "!bg-slate-600 text-white"
+              furnished ? "bg-white text-black" : "!bg-slate-600 text-white"
             }`}
           >
             No
           </button>
         </div>
 
-        <p className="text-lg mt-6 font-semibold">Address</p>
+        <label className="text-lg font-semibold">Address</label>
         <textarea
           type="text"
           name="address"
           id="address"
           value={address}
-          onChange={onchange}
+          onChange={onChange}
           placeholder="Address"
           required
           aria-required
           className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-800 focus:bg-white focus:border-slate-600 mb-6"
         />
+        {!geolocationEnabled && (
+          <div className="flex gap-3 mb-6">
+            <div>
+              <label className="text-lg font-semibold">Latitude</label>
+              <input type="number" id="latitude" value={latitude} onChange={onChange} required aria-required min="-90" max="90" className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-grey-300 rounded transition duration-150 ease-i
+               focus:bg-white focus:text-gray-700 focus:border-slate-600 text-center"/>
+            </div>
 
-        <p className="text-lg font-semibold">Description</p>
+            <div>
+              <label className="text-lg font-semibold">Longitude</label>
+              <input type="number" id="longitude" value={longitude} onChange={onChange} required aria-required min="-180" max="180" className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-grey-300 rounded transition duration-150 ease-in-out
+               focus:bg-white focus:text-gray-700 focus:border-slate-600 text-center"/>
+            </div>
+          </div>
+        )}
+        <label className="text-lg font-semibold">Description</label>
         <textarea
           type="text"
           name="description"
           id="description"
           value={description}
-          onChange={onchange}
+          onChange={onChange}
           placeholder="Describe your dream home"
           required
           aria-required
           className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-800 focus:bg-white focus:border-slate-600 mb-6"
         />
 
-        <p className="text-lg  font-semibold">Offer</p>
+        <label className="text-lg  font-semibold">Offer</label>
         <div className="flex justify-between gap-3 mb-6">
           <button
             type="button"
-            id="type"
+            id="offer"
             value={true}
             onClick={onChange}
             className={`px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-150 ease-in-out w-full ${
@@ -225,7 +319,7 @@ function CreateListing() {
 
         <div>
           <div>
-            <p className="text-lg font-semibold">Regular Price</p>
+            <label className="text-lg font-semibold mb-6">Regular Price</label>
             <div className="flex justify-center items-center space-x-6 mb-6">
               <input
                 type="number"
@@ -249,7 +343,7 @@ function CreateListing() {
         {offer === true && (
           <div>
             <div>
-              <p className="text-lg font-semibold">Discounted Price</p>
+              <label className="text-lg font-semibold mb-6">Discounted Price</label>
               <div className="flex justify-center items-center space-x-6 mb-6">
                 <input
                   type="number"
@@ -268,28 +362,34 @@ function CreateListing() {
                     {" "}
                     $/month
                   </div>
-                )}
+                )}{" "}
+                {/* made it dynamic by using {" "} */}
               </div>
             </div>
           </div>
         )}
 
         <div className="mb-6">
-          <p className="font-semibold text-lg ">Images</p>
+          <label className="font-semibold text-lg block ">Images</label>
           <small className="text-gray-600">
-            The first image will be the cover (max-6)
+            The first image will be the cover (max 6)
           </small>
           <input
             type="file"
             id="images"
             onChange={onChange}
-            accept=".jpg,.png,.jpeg"
+            accept=".jpg, .png,.jpeg"
+            multiple
             className="w-full text-gray-700 mt-3 border border-gray-300 bg-white rounded transition duration-150 ease-in-out focus:bg-white focus:border-slate-600"
           />
         </div>
 
-        <button type="submit"
-          className="mb-6 w-full px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-transparentactive:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Create Listing</button>
+        <button
+          type="submit"
+          className="mb-6 w-full px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-transparent active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+        >
+          Create Listing
+        </button>
       </form>
     </main>
   );
