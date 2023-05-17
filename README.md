@@ -6,4 +6,5 @@ At the end of this project, I tend to understand
 - React
 - Tailwindcss
 - Firebase
-- React-tosastif
+- React-tosastify
+- Geolocation API usage 
