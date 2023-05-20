@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Spinner from "../components/Spinner"
-import { toast } from "react-toastify"
-
-
+import Spinner from "../components/Spinner";
+import { toast } from "react-toastify";
 
 function CreateListing() {
-  const [geolocationEnabled, setGeolocationEnabled] = useState(false);
+  const [geolocationEnabled, setGeolocationEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     type: "rent",
@@ -37,22 +35,21 @@ function CreateListing() {
     discountPrice,
     images,
     latitude,
-    longitude
+    longitude,
   } = formData;
 
   //Load saved formData
   useEffect(() => {
-    const savedFormData = JSON.parse(localStorage.getItem('formData'));
+    const savedFormData = JSON.parse(localStorage.getItem("formData"));
     if (savedFormData) {
-      setFormData(savedFormData)
+      setFormData(savedFormData);
     }
   }, []);
 
   //Save formData
   useEffect(() => {
-    localStorage.setItem('formData', JSON.stringify(formData));
-  }, [formData])
-
+    localStorage.setItem("formData", JSON.stringify(formData));
+  }, [formData]);
 
   function onChange(e) {
     let boolean = null;
@@ -80,31 +77,38 @@ function CreateListing() {
         [e.target.id]: boolean !== null ? boolean : e.target.value, //want to check if null true or false
       }));
     }
-    
   }
 
   async function onSubmit(e) {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
     if (discountPrice >= regularPrice) {
       setLoading(false);
-      toast.error("Discounted Price needs to be less than Regular Price")
-      return
+      toast.error("Discounted Price needs to be less than Regular Price");
+      return;
     }
 
     if (images.length > 6) {
       setLoading(false);
-      toast.error("Maximum 6 images are required")
-      return
+      toast.error("Maximum 6 images are required");
+      return;
     }
 
     let geolocation = {};
     let location;
-    
-    if (geolocationEnabled) {
-      const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address${address}&key=${process.env.REACT_API_GOOGLE_API_KEY}`);
 
-      const data = await response.json();
+    if (geolocationEnabled) {
+      // const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_API_GOOGLE_API_KEY}`);
+
+      const response = await fetch(
+        `https://us1.locationiq.com/v1/search?key=${
+          import.meta.env.REACT_APP_GEOCODE_API_KEY
+        }&q=${address}format=json`
+      );
+
+      const data = await response.text();
+
+      console.log(data);
     }
   }
 
@@ -266,14 +270,34 @@ function CreateListing() {
           <div className="flex gap-3 mb-6">
             <div>
               <label className="text-lg font-semibold">Latitude</label>
-              <input type="number" id="latitude" value={latitude} onChange={onChange} required aria-required min="-90" max="90" className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-grey-300 rounded transition duration-150 ease-i
-               focus:bg-white focus:text-gray-700 focus:border-slate-600 text-center"/>
+              <input
+                type="number"
+                id="latitude"
+                value={latitude}
+                onChange={onChange}
+                required
+                aria-required
+                min="-90"
+                max="90"
+                className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-grey-300 rounded transition duration-150 ease-i
+               focus:bg-white focus:text-gray-700 focus:border-slate-600 text-center"
+              />
             </div>
 
             <div>
               <label className="text-lg font-semibold">Longitude</label>
-              <input type="number" id="longitude" value={longitude} onChange={onChange} required aria-required min="-180" max="180" className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-grey-300 rounded transition duration-150 ease-in-out
-               focus:bg-white focus:text-gray-700 focus:border-slate-600 text-center"/>
+              <input
+                type="number"
+                id="longitude"
+                value={longitude}
+                onChange={onChange}
+                required
+                aria-required
+                min="-180"
+                max="180"
+                className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-grey-300 rounded transition duration-150 ease-in-out
+               focus:bg-white focus:text-gray-700 focus:border-slate-600 text-center"
+              />
             </div>
           </div>
         )}
@@ -343,7 +367,9 @@ function CreateListing() {
         {offer === true && (
           <div>
             <div>
-              <label className="text-lg font-semibold mb-6">Discounted Price</label>
+              <label className="text-lg font-semibold mb-6">
+                Discounted Price
+              </label>
               <div className="flex justify-center items-center space-x-6 mb-6">
                 <input
                   type="number"
