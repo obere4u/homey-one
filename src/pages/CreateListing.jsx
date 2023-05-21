@@ -100,18 +100,15 @@ function CreateListing() {
     if (geolocationEnabled) {
       const realtorAPI_KEY = import.meta.env.VITE_REACT_APP_GEOCODE_API_KEY;
       
-
-      // const response = await fetch(
-      //   `http://api.positionstack.com/v1/forward?access_key=${realtorAPI_KEY}&query=${address}`
-      // );
-
       const response = await fetch(
         `http://dev.virtualearth.net/REST/v1/Locations?query=${address}&key=${realtorAPI_KEY}`
       );
 
       const data = await response.json();
+      const lat = data.resource[0]
+      console.log(lat);
 
-      console.log(data);
+      // geolocation.lat = data.resourceSet
     }
   }
 
