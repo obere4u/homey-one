@@ -98,15 +98,18 @@ function CreateListing() {
     let location;
 
     if (geolocationEnabled) {
-      // const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_API_GOOGLE_API_KEY}`);
+      const realtorAPI_KEY = import.meta.env.VITE_REACT_APP_GEOCODE_API_KEY;
+      
+
+      // const response = await fetch(
+      //   `http://api.positionstack.com/v1/forward?access_key=${realtorAPI_KEY}&query=${address}`
+      // );
 
       const response = await fetch(
-        `https://us1.locationiq.com/v1/search?key=${
-          import.meta.env.REACT_APP_GEOCODE_API_KEY
-        }&q=${address}format=json`
+        `http://dev.virtualearth.net/REST/v1/Locations?query=${address}&key=${realtorAPI_KEY}`
       );
 
-      const data = await response.text();
+      const data = await response.json();
 
       console.log(data);
     }
