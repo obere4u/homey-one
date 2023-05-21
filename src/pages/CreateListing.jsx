@@ -105,10 +105,20 @@ function CreateListing() {
       );
 
       const data = await response.json();
-      const lat = data.resource[0]
-      console.log(lat);
 
-      // geolocation.lat = data.resourceSet
+      const formattedAddress = data.resourceSets[0].resources[0].address;
+      const fullAddress = JSON.stringify(formattedAddress)
+
+      const[Latitude, Longitude] = data.resourceSets[0].resources[0].point.coordinates;
+
+      console.log("Formatted Address: " + fullAddress);
+      // console.log("Coordinates:", coordinates);
+      console.log("Latitude: " + Latitude)
+      console.log("Longitude: " + Longitude)
+
+      // console.log(data);
+
+      // geolocation.lat = Latitude
     }
   }
 
