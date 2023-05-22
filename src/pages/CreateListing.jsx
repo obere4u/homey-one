@@ -3,7 +3,7 @@ import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 
 function CreateListing() {
-  const [geolocationEnabled, setGeolocationEnabled] = useState(true);
+  const [geolocationEnabled, setGeolocationEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     type: "rent",
@@ -99,26 +99,38 @@ function CreateListing() {
 
     if (geolocationEnabled) {
       const realtorAPI_KEY = import.meta.env.VITE_REACT_APP_GEOCODE_API_KEY;
-      
+
       const response = await fetch(
         `http://dev.virtualearth.net/REST/v1/Locations?query=${address}&key=${realtorAPI_KEY}`
       );
 
       const data = await response.json();
 
-      const formattedAddress = data.resourceSets[0].resources[0].address;
-      const fullAddress = JSON.stringify(formattedAddress)
+      // const formattedAddress = data.resourceSets[0].resources[0].address;
+      // const fullAddress = JSON.stringify(formattedAddress)
 
-      const[Latitude, Longitude] = data.resourceSets[0].resources[0].point.coordinates;
+      // const[Latitude, Longitude] = data.resourceSets[0].resources[0].geocodePoints.coordinates;
 
-      console.log("Formatted Address: " + fullAddress);
-      // console.log("Coordinates:", coordinates);
-      console.log("Latitude: " + Latitude)
-      console.log("Longitude: " + Longitude)
+      if (
+        data.resourceSets &&
+        data.resourceSets.length > 0 &&
+        data.resourceSets[0].resources &&
+        data.resourceSets[0].resources.length > 0 &&
+        data.resourceSets[0].resources[0].geocodePoints &&
+        data.resourceSets[0].resources[0].geocodePoints.length > 0
+      ) {
+        geolocation.lat =
+          data.resourceSets[0].resources[0].geocodePoints[0].coordinates[0] || 0;
+        geolocation.long =
+          data.resourceSets[0].resources[0].geocodePoints[0].coordinates[1] || 0;
+      } else {
+        setLoading(false);
+        toast.error("Invalid response data or missing geolocation information");
+      }
 
-      // console.log(data);
-
-      // geolocation.lat = Latitude
+    } else {
+      geolocation.lat = latitude;
+      geolocation.long = longitude
     }
   }
 
@@ -416,6 +428,8 @@ function CreateListing() {
             onChange={onChange}
             accept=".jpg, .png,.jpeg"
             multiple
+            required
+            aria-required
             className="w-full text-gray-700 mt-3 border border-gray-300 bg-white rounded transition duration-150 ease-in-out focus:bg-white focus:border-slate-600"
           />
         </div>
