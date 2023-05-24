@@ -50,10 +50,7 @@ function App() {
             path="/offers"
             element={<Offers />}
           />
-          <Route
-            path="/create-listing"
-            element={<PrivateRoute />}
-          >
+          <Route path="/create-listing" element={<PrivateRoute />}>
             <Route
               path="/create-listing"
               element={<CreateListing />}

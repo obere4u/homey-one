@@ -9,9 +9,12 @@ import {
 } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebase";
+import { useNavigate } from "react-router";
 
 function CreateListing() {
-
+  const navigate = useNavigate();
   const auth = getAuth();
 
   const [geolocationEnabled, setGeolocationEnabled] = useState(true);
@@ -93,7 +96,8 @@ function CreateListing() {
   async function onSubmit(e) {
     e.preventDefault();
     setLoading(true);
-    if (discountPrice >= regularPrice) {
+    //Making sure they are numbers and not string
+    if (+discountPrice >= +regularPrice) {
       setLoading(false);
       toast.error("Discounted Price needs to be less than Regular Price");
       return;
@@ -131,24 +135,25 @@ function CreateListing() {
         data.resourceSets[0].resources[0].geocodePoints.length > 0
       ) {
         geolocation.lat =
-          data.resourceSets[0].resources[0].geocodePoints[0].coordinates[0] || 0;
+          data.resourceSets[0].resources[0].geocodePoints[0].coordinates[0] ||
+          0;
         geolocation.long =
-          data.resourceSets[0].resources[0].geocodePoints[0].coordinates[1] || 0;
+          data.resourceSets[0].resources[0].geocodePoints[0].coordinates[1] ||
+          0;
       } else {
         setLoading(false);
         toast.error("Invalid response data or missing geolocation information");
       }
-
     } else {
       geolocation.lat = latitude;
-      geolocation.long = longitude
+      geolocation.long = longitude;
     }
 
     async function storeImage(image) {
       return new Promise((resolve, reject) => {
         const storage = getStorage();
         const filename = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`;
-        const storageRef = ref(storage, filename)
+        const storageRef = ref(storage, filename);
 
         const uploadTask = uploadBytesResumable(storageRef, image);
 
@@ -170,29 +175,45 @@ function CreateListing() {
             }
           },
           (error) => {
-            reject(error)
+            reject(error);
           },
           () => {
             // Handle successful uploads on complete
             // For instance, get the download URL: https://firebasestorage.googleapis.com/...
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              resolve("File available at", downloadURL);
+              resolve(downloadURL);
             });
           }
         );
-      })
+      });
     }
 
     const imgUrls = await Promise.all(
-      [...images].map((image) => storeImage(image).catch((error) => {
+      [...images].map((image) =>
+        storeImage(image).catch((error) => {
           setLoading(false);
           toast.error("Image not uploaded");
           return;
         })
       )
     );
-    console.log(imgUrls);
 
+    let formDataCopy = {
+      ...formData,
+      imgUrls,
+      geolocation,
+      timeStamp: serverTimestamp(),
+    };
+
+    delete formDataCopy.images;
+    !formDataCopy.offer && delete formDataCopy.discountPrice;
+
+    const docRef = await addDoc(collection(db, "listings"), formDataCopy);
+    delete formDataCopy.latitude;
+    delete formDataCopy.longitude;
+    // navigate(`/category/${formDataCopy.type}/${docRef.id}`);
+    setLoading(false);
+    toast.success("List created successfully");
   }
 
   if (loading) {
@@ -200,7 +221,7 @@ function CreateListing() {
   }
 
   return (
-    <main className="max-w-md px-2 mx-auto">
+    <main className="max-w-md px-2 mx-auto pt-4">
       <h1 className="text-3xl text-center font-bold mb-6">Create a Listing</h1>
       <form onSubmit={onSubmit}>
         <label className="text-lg font-semibold">Sell / Rent</label>

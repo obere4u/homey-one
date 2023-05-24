@@ -6,10 +6,7 @@ import Spinner from './Spinner';
 export default function PrivateRoute() {
   const { loggedIn, checkStatus } = useAuthStatus();
   if (checkStatus) {
-    return <Spinner />;
-    {
-      /*  you can add spinner effects here, this makes sure that the page doesn't return anything until check is completed */
-    }
+    return <Spinner />; 
   }
   return loggedIn ? <Outlet /> : <Navigate to="/sign-in/" />
 }
