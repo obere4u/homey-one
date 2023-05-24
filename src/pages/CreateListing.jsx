@@ -11,7 +11,7 @@ import { getAuth } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 function CreateListing() {
   const navigate = useNavigate();
@@ -51,6 +51,7 @@ function CreateListing() {
     latitude,
     longitude,
   } = formData;
+  const [value, setValue] = useState('');
 
   //Load saved formData
   useEffect(() => {
@@ -84,6 +85,19 @@ function CreateListing() {
         images: e.target.files,
       }));
     }
+
+    // number
+    if (e.target.type === "number") {
+      const inputValue = e.target.value;
+      const sanitizedValue = inputValue.replace(/^0+/, ""); // Remove leading zeros
+
+      setFormData((prevState) => ({
+        ...prevState,
+        [e.target.id]: sanitizedValue,
+      }));
+      return;
+    }
+
     //text/boolean/number
     if (!e.target.files) {
       setFormData((prevState) => ({
@@ -211,7 +225,7 @@ function CreateListing() {
     const docRef = await addDoc(collection(db, "listings"), formDataCopy);
     delete formDataCopy.latitude;
     delete formDataCopy.longitude;
-    // navigate(`/category/${formDataCopy.type}/${docRef.id}`);
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`);
     setLoading(false);
     toast.success("List created successfully");
   }
@@ -383,8 +397,7 @@ function CreateListing() {
                 aria-required
                 min="-90"
                 max="90"
-                className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-grey-300 rounded transition duration-150 ease-i
-               focus:bg-white focus:text-gray-700 focus:border-slate-600 text-center"
+                className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-grey-300 rounded transition duration-150 ease-in-out focus:bg-white focus:text-gray-700 focus:border-slate-600 text-center"
               />
             </div>
 
@@ -399,8 +412,7 @@ function CreateListing() {
                 aria-required
                 min="-180"
                 max="180"
-                className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-grey-300 rounded transition duration-150 ease-in-out
-               focus:bg-white focus:text-gray-700 focus:border-slate-600 text-center"
+                className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-grey-300 rounded transition duration-150 ease-in-out focus:bg-white focus:text-gray-700 focus:border-slate-600 text-center"
               />
             </div>
           </div>
@@ -412,7 +424,7 @@ function CreateListing() {
           id="description"
           value={description}
           onChange={onChange}
-          placeholder="Describe your dream home"
+          placeholder="Provide details about your listing..."
           required
           aria-required
           className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-800 focus:bg-white focus:border-slate-600 mb-6"
