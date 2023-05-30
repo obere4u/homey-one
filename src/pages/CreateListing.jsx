@@ -217,18 +217,18 @@ function CreateListing() {
       imgUrls,
       geolocation,
       timeStamp: serverTimestamp(),
-      userRef: auth.currentUser.uid
+      userRef: auth.currentUser.uid,
     };
 
     delete formDataCopy.images;
     !formDataCopy.offer && delete formDataCopy.discountPrice;
-
-    const docRef = await addDoc(collection(db, "listings"), formDataCopy);
     delete formDataCopy.latitude;
     delete formDataCopy.longitude;
-    navigate(`/category/${formDataCopy.type}/${docRef.id}`);
+
+    const docRef = await addDoc(collection(db, "listings"), formDataCopy);
     setLoading(false);
-    toast.success("List created successfully");
+    toast.success("Listing created successfully");
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   }
 
   if (loading) {

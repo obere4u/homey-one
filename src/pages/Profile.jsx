@@ -1,17 +1,20 @@
 import { getAuth } from 'firebase/auth';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { updateProfile } from 'firebase/auth';
-import { doc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, orderBy, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { toast } from 'react-toastify'
 import {FcHome} from 'react-icons/fc'
+import ListingItem from '../components/ListingItem';
 
 export default function Profile() {
   const auth = getAuth();
   const navigate = useNavigate();
   const [changeDetails, setChangeDetails] = useState(false)
+  const [listings, setListings] = useState(null)
+  const [loading, setLoading] = useState(true)
   const [formData, setFormData] = useState({
     name: auth.currentUser.displayName,
     email: auth.currentUser.email,
@@ -56,6 +59,35 @@ function onChange(e) {
     }
   }
 
+  useEffect(() => {
+    async function fetchUserListings() {
+      const listingRef = collection(db, "listings");
+      const q = query(
+        listingRef,
+        where("userRef", "==", auth.currentUser.uid),
+        orderBy("timeStamp", "desc")//desc = descending, latest one comes first
+      );
+      console.log(q);
+      try {
+        const querySnap = await getDocs(q);
+        let listings = [];
+        querySnap.forEach((doc) => {
+          listings.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        });
+        console.log(doc.id)
+        setListings(listings);
+        setLoading(false)
+      } catch (error) {
+        toast.error("Error fetching listings")
+      }
+        
+    }
+    fetchUserListings();
+  }, [auth.currentUser.uid])
+
 
   return (
     <>
@@ -87,7 +119,6 @@ function onChange(e) {
 
             <div className="flex justify-between whitespace-nowrap text-md mb-6 px-6">
               <p className="flex items-center">
-                Edit your name?
                 <span
                   className="text-red-600 hover:text-red-700 transition ease-in-out duration:200ms ml-1 cursor-pointer font-semibold"
                   onClick={() => {
@@ -110,12 +141,35 @@ function onChange(e) {
             type="submit"
             className="w-full bg-blue-600 text-white uppercase px-7 py-3 text-small font-medium rounded-md shadow-md hover:bg-blue-700 transition ease-in-out duration:200ms ml-1 hover:shadow-lg active:bg-blue-800 cursor-pointer"
           >
-            <Link to="/create-listing" className='flex justify-center items-center'>
-              Sell or Rent Your Home <FcHome className='text-3xl ml-3 bg-red-200 rounded-full border-2 p-1'/>
+            <Link
+              to="/create-listing"
+              className="flex justify-center items-center"
+            >
+              Sell or Rent Your Home{" "}
+              <FcHome className="text-3xl ml-3 bg-red-200 rounded-full border-2 p-1" />
             </Link>
           </button>
         </div>
       </section>
+
+      <div className="max-w-6xl px-3 mt-6 mx-auto">
+        {!loading && listings.length > 0 && (
+          <>
+            <h2 className="text-2xl text-center font-semibold">My Listings</h2>
+            <ul>
+              {listings.map((listing) => {
+                return (
+                  <ListingItem
+                    key={listing.id}
+                    id={listing.id}
+                    listing={listing.data}
+                  />
+                )
+              })}
+            </ul>
+          </>
+        )}
+      </div>
     </>
   );
 }
