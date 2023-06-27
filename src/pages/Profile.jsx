@@ -62,14 +62,13 @@ function onChange(e) {
   useEffect(() => {
     async function fetchUserListings() {
       const listingRef = collection(db, "listings");
-      const q = query(
+      const userQuery = query(
         listingRef,
         where("userRef", "==", auth.currentUser.uid),
         orderBy("timeStamp", "desc")//desc = descending, latest one comes first
       );
-      console.log(q);
       try {
-        const querySnap = await getDocs(q);
+        const querySnap = await getDocs(userQuery);
         let listings = [];
         querySnap.forEach((doc) => {
           listings.push({
@@ -77,13 +76,11 @@ function onChange(e) {
             data: doc.data(),
           });
         });
-        console.log(doc.id)
         setListings(listings);
         setLoading(false)
       } catch (error) {
         toast.error("Error fetching listings")
       }
-        
     }
     fetchUserListings();
   }, [auth.currentUser.uid])

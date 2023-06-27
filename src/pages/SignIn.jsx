@@ -85,7 +85,7 @@ export default function SignIn() {
               onChange={onChange}
               placeholder="Username/Email-address"
               aria-required
-              className="w-full px-4 py-2 text-large text-gray-700 bg-white border-gray-300 rounded-md transition ease-in-out mb-6"
+              className="w-full px-4 py-2 text-lg text-gray-700 bg-white border-gray-300 rounded-md transition ease-in-out mb-6"
             />
             {/*onChange is an eventListener that listens when something changes like typing something in a form field */}
             <div className="relative mb-6">
@@ -96,7 +96,7 @@ export default function SignIn() {
                 aria-required
                 value={password}
                 onChange={onChange}
-                className="w-full px-4 py-2 text-large text-gray-700 bg-white border-gray-300 rounded-md"
+                className="w-full px-4 py-2 text-lg text-gray-700 bg-white border-gray-300 rounded-md"
               />
               {showPassword ? (
                 <AiFillEye
