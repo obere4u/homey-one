@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { updateProfile } from 'firebase/auth';
-import { collection, doc, getDocs, orderBy, query, updateDoc, where } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, orderBy, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { toast } from 'react-toastify'
 import {FcHome} from 'react-icons/fc'
@@ -83,7 +83,22 @@ function onChange(e) {
       }
     }
     fetchUserListings();
-  }, [auth.currentUser.uid])
+  }, [auth.currentUser.uid]);
+
+  async function onDelete(listingID){
+    if (window.confirm("Are you sure you want to delete listing?")) {
+      await deleteDoc(doc(db, "listings", listingID))
+      const updatedListings = listings.filter(
+        (listing) => listing.id !== listingID
+      );
+      setListings(updatedListings);
+      toast.success("Listing successfully deleted")
+    }
+  }
+  
+  function onEdit(listingID){
+    navigate(`/edit-listing/${listingID}`)
+  }
 
 
   return (
@@ -160,6 +175,8 @@ function onChange(e) {
                     key={listing.id}
                     id={listing.id}
                     listing={listing.data}
+                    onDelete={()=>onDelete(listing.id)}
+                    onEdit={()=>onEdit(listing.id)}
                   />
                 )
               })}
