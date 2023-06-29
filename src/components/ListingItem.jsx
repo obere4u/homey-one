@@ -2,11 +2,23 @@ import React from "react";
 import Moment from "react-moment";
 import { Link } from "react-router-dom";
 import { MdLocationOn } from "react-icons/md";
+import {MdEdit} from 'react-icons/md';
+import {FaTrash} from 'react-icons/fa'
 
-export default function ListingItem({ listing, id }) {
+export default function ListingItem({ listing, id, onDelete, onEdit }) {
+
+  const isOffer = listing.offer !== undefined && listing.offer > 0;
+
+  const formattedDiscountPrice = listing.discountPrice?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  const formattedRegularPrice = listing.regularPrice?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
   return (
     <li className="relative bg-white flex flex-col justify-between items-center shadow-md hover:shadow-xl rounded-md overflow-hidden transition-shadow duration-150 m-3">
-      <Link className="contents" to={`/category/${listing.type}/${id}`}>
+      <Link
+        className="contents"
+        to={`/category/${listing.type}/${id}`}
+      >
         <img
           src={listing.imgUrls[0]}
           alt="Listing Image"
@@ -27,15 +39,21 @@ export default function ListingItem({ listing, id }) {
             </p>
           </div>
           <p className="font-semibold m-0 text-xl truncate">{listing.name}</p>
-          <p className="text-[#457b93] mt-2 font-semibold">
-            $
-            {listing.offer
-              ? listing.discountPrice
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-              : listing.regularPrice
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+          <p className="flex gap-1 items-center just mt-2 text-[#457b93] font-semibold">
+            <div className="flex flex-col">
+              {isOffer && (
+                <span className="line-through text-xs text-gray-500">
+                  ${formattedRegularPrice}
+                </span>
+              )}
+              <span className="text-[#457b93] font-semibold">
+                {isOffer ? (
+                  <span>${formattedDiscountPrice}</span>
+                ) : (
+                  <span>${formattedRegularPrice}</span>
+                )}
+              </span>
+            </div>
             {listing.type === "rent" && " / month"}
           </p>
           <div className="flex items-center mt-[10px] space-x-3">
@@ -55,6 +73,15 @@ export default function ListingItem({ listing, id }) {
           </div>
         </div>
       </Link>
+      {onDelete && (
+        <FaTrash
+          className="absolute bottom-2 right-2 h-[14px] cursor-pointer text-red-700" onClick={()=>onDelete(listing.id)} />
+      )}
+      {onEdit && (
+        <MdEdit
+          className="absolute bottom-2 right-8 h-4 cursor-pointer text-black" onClick={()=>onEdit(listing.id)} />
+      )}
     </li>
   );
 }
+ 
