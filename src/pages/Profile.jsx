@@ -1,54 +1,62 @@
-import { getAuth } from 'firebase/auth';
-import React, { useEffect } from 'react'
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { updateProfile } from 'firebase/auth';
-import { collection, deleteDoc, doc, getDocs, orderBy, query, updateDoc, where } from 'firebase/firestore';
-import { db } from '../firebase';
-import { toast } from 'react-toastify'
-import {FcHome} from 'react-icons/fc'
-import ListingItem from '../components/ListingItem';
+import { getAuth } from "firebase/auth";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { updateProfile } from "firebase/auth";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { db } from "../firebase";
+import { toast } from "react-toastify";
+import { FcHome } from "react-icons/fc";
+import ListingItem from "../components/ListingItem";
 
 export default function Profile() {
   const auth = getAuth();
   const navigate = useNavigate();
-  const [changeDetails, setChangeDetails] = useState(false)
-  const [listings, setListings] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [changeDetails, setChangeDetails] = useState(false);
+  const [listings, setListings] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-    name: auth.currentUser.displayName,
-    email: auth.currentUser.email,
+    name: auth.currentUser?.displayName || "",
+    email: auth.currentUser?.email || "",
   });
-  const {name, email} = formData;
+  const { name, email } = formData;
+
   function onLoggedOut() {
     auth.signOut();
-    navigate("/")
-}
+    navigate("/");
+  }
 
-function onChange(e) {
-  setFormData((prevState) => ({
-    ...prevState,
-    [e.target.id]: e.target.value,
-  }));
-}
+  function onChange(e) {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.id]: e.target.value,
+    }));
+  }
 
   async function onSubmit() {
     const prevName = auth.currentUser.displayName;
     try {
       if (prevName !== name) {
-        //Update Display Name in firebase auth
+        // Update Display Name in firebase auth
         await updateProfile(auth.currentUser, {
           displayName: name,
         });
 
-        //Update name in DataBase (firebase)
+        // Update name in DataBase (firebase)
         const docRef = doc(db, "users", auth.currentUser.uid);
         await updateDoc(docRef, {
           name,
         });
       }
       toast.success("Profile Update Successful");
-
     } catch (error) {
       toast.error("Could not Update Profile details");
       // Revert name in the form to the previous name
@@ -65,7 +73,7 @@ function onChange(e) {
       const userQuery = query(
         listingRef,
         where("userRef", "==", auth.currentUser.uid),
-        orderBy("timeStamp", "desc")//desc = descending, latest one comes first
+        orderBy("timeStamp", "desc")
       );
       try {
         const querySnap = await getDocs(userQuery);
@@ -77,29 +85,30 @@ function onChange(e) {
           });
         });
         setListings(listings);
-        setLoading(false)
+        setLoading(false);
       } catch (error) {
-        toast.error("Error fetching listings")
+        toast.error("Error fetching listings");
       }
     }
-    fetchUserListings();
-  }, [auth.currentUser.uid]);
+    if (auth.currentUser) {
+      fetchUserListings();
+    }
+  }, [auth.currentUser]);
 
-  async function onDelete(listingID){
+  async function onDelete(listingID) {
     if (window.confirm("Are you sure you want to delete listing?")) {
-      await deleteDoc(doc(db, "listings", listingID))
+      await deleteDoc(doc(db, "listings", listingID));
       const updatedListings = listings.filter(
         (listing) => listing.id !== listingID
       );
       setListings(updatedListings);
-      toast.success("Listing successfully deleted")
+      toast.success("Listing successfully deleted");
     }
   }
-  
-  function onEdit(listingID){
-    navigate(`/edit-listing/${listingID}`)
-  }
 
+  function onEdit(listingID) {
+    navigate(`/edit-listing/${listingID}`);
+  }
 
   return (
     <>
@@ -175,10 +184,10 @@ function onChange(e) {
                     key={listing.id}
                     id={listing.id}
                     listing={listing.data}
-                    onDelete={()=>onDelete(listing.id)}
-                    onEdit={()=>onEdit(listing.id)}
+                    onDelete={() => onDelete(listing.id)}
+                    onEdit={() => onEdit(listing.id)}
                   />
-                )
+                );
               })}
             </ul>
           </>

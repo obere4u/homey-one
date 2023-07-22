@@ -39,7 +39,7 @@ export default function ListingItem({ listing, id, onDelete, onEdit }) {
             </p>
           </div>
           <p className="font-semibold m-0 text-xl truncate">{listing.name}</p>
-          <p className="flex gap-1 items-center just mt-2 text-[#457b93] font-semibold">
+          <div className="flex gap-1 items-center just mt-2 text-[#457b93] font-semibold">
             <div className="flex flex-col">
               {isOffer && (
                 <span className="line-through text-xs text-gray-500">
@@ -55,7 +55,7 @@ export default function ListingItem({ listing, id, onDelete, onEdit }) {
               </span>
             </div>
             {listing.type === "rent" && " / month"}
-          </p>
+          </div>
           <div className="flex items-center mt-[10px] space-x-3">
             <div className="flex items-center space-x-1">
               <p className="font-bold text-xs">
