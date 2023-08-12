@@ -36,6 +36,11 @@ export default function Listing() {
   if (loading) {
     return <Spinner />;
   }
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+  };
+
   return (
     <main>
       <Swiper
@@ -52,7 +57,7 @@ export default function Listing() {
               <div
                 className="relative w-full h-[300px] overflow-hidden"
                 style={{
-                  background: `url(${listing.imgUrls[index]}) center no-repeat`,
+                  background: `url(${url}) center no-repeat`,
                   backgroundSize: "cover",
                 }}
               ></div>
