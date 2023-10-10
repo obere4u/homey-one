@@ -31,12 +31,14 @@ export default function SignIn() {
   }
 
   const [showPassword, setShowPassword] = useState(false); //showPassword is a hook and we set the useState to false so that the password will be hidden by default
+
   const [formData, setFormData] = useState({
     //hook that will cover the email, password etc
     email: "",
     password: "",
   });
   // no access to those formData so we need to destructure it like this
+  
   const { email, password } = formData;
   const navigate = useNavigate();
 

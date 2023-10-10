@@ -174,7 +174,7 @@ export default function SignUp() {
               Sign Up
             </button>
 
-            <div className="flex items-center my-4 before:flex-1 before:border-t border-gray-400 after:flex-1 after:border-t after-gray-400">
+            <div className="flex items-center my-4 before:flex-1 before:border-t border-gray-400 after:flex-1 after:border-t after:gray-400">
               <p className="text-center font-semibold mx-4">OR</p>
             </div>
             <OAuth />
