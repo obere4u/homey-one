@@ -22,6 +22,7 @@ import {
 } from "react-icons/fa";
 import { getAuth } from "firebase/auth";
 import Contact from "./Contact";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 export default function Listing() {
   const params = useParams();
@@ -105,8 +106,8 @@ export default function Listing() {
         </span>
       )}
 
-      <div className="m-4 flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg shadow-lg lg:space-x-5">
-        <div className="w-fullG">
+      <div className="m-4 flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg shadow-lg lg:space-x-5 md:space-x-5">
+        <div className="w-full">
           <p className="text-2xl font-bold mb-3 text-blue-900">
             {/* adds coma after every 3 digits (.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")) */}
             {listing.name} - $
@@ -164,7 +165,26 @@ export default function Listing() {
             />
           )}
         </div>
-        <div className="w-full h-[200px] lg-[400px] bg-red-600 z-10 overflow-x-hidden"></div>
+        <div className="h-[200px] md:h-[400px] w-full z-10 overflow-x-hidden mt-5 md:mt-0">
+          <MapContainer
+            center={[listing.geolocation.lat, listing.geolocation.long]}
+            zoom={13}
+            scrollWheelZoom={false}
+            style={{height:"100%", width: "100%"}}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker
+              position={[listing.geolocation.lat, listing.geolocation.long]}
+            >
+              <Popup>
+                {listing.address}
+              </Popup>
+            </Marker>
+          </MapContainer>
+        </div>
       </div>
     </main>
   );
