@@ -12,13 +12,24 @@ import {
 } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/bundle";
-import { FaBath, FaBed, FaChair, FaMapMarkerAlt, FaParking, FaShare } from "react-icons/fa";
+import {
+  FaBath,
+  FaBed,
+  FaChair,
+  FaMapMarkerAlt,
+  FaParking,
+  FaShare,
+} from "react-icons/fa";
+import { getAuth } from "firebase/auth";
+import Contact from "./Contact";
 
 export default function Listing() {
   const params = useParams();
+  const auth = getAuth();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [shareLinkCopied, setShareLinkCopied] = useState(false);
+  const [contactOwner, setContactOwner] = useState(false);
 
   useEffect(() => {
     async function fetchListing() {
@@ -95,7 +106,7 @@ export default function Listing() {
       )}
 
       <div className="m-4 flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg shadow-lg lg:space-x-5">
-        <div className="w-full h-[200px] lg-[400px]">
+        <div className="w-fullG">
           <p className="text-2xl font-bold mb-3 text-blue-900">
             {/* adds coma after every 3 digits (.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")) */}
             {listing.name} - $
@@ -136,6 +147,22 @@ export default function Listing() {
               {listing.furnish ? "Furnished" : "Not Furnished"}
             </li>
           </ul>
+          {listing.userRef !== auth.currentUser?.uid && !contactOwner && (
+            <div className="mt-6">
+              <button
+                onClick={() => setContactOwner(true)}
+                className="px-7 py-3 bg-blue-600 text-white font-medium  text-sm uppercase rounded shadow-medium hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg w-full text-center transition duration-100 ease-in-out"
+              >
+                Contact Owner
+              </button>
+            </div>
+          )}
+          {contactOwner && (
+            <Contact
+              userRef={listing.userRef}
+              listing={listing}
+            />
+          )}
         </div>
         <div className="w-full h-[200px] lg-[400px] bg-red-600 z-10 overflow-x-hidden"></div>
       </div>
