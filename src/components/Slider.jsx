@@ -40,7 +40,6 @@ export default function Slider() {
 
         setListingsData(listings);
         setLoading(false);
-        console.log(listings);
       } catch (error) {
         toast.error("Error fetching listings");
       }
@@ -94,6 +93,7 @@ export default function Slider() {
               <p className="text-[#F1FAEE] absolute left-1 bottom-1 font-semibold max-w-[90%] bg-[#E63946] shadow-lg opacity-90 p-3 rounded-br-3xl rounded-tl-3xl">
                 ${formattedDiscountPrice ?? formattedRegularPrice}
                 {data.type === "rent" && " /month"}
+                {data.type === "sale" && " (Sale)"}
               </p>
             </SwiperSlide>
           );
