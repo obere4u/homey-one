@@ -112,7 +112,7 @@ export default function Offers() {
           {lastFetchedListing && (
             <div className="flex justify-center items-center">
               <button
-                className="bg-white px-3 py-1.5 text-grey-700 border border-grey-300 mb-6 mt-6 hover:border-slate-600 rounded transition duration-150 ease-in-out"
+                className="bg-white px-3 py-1.5 text-grey-700 border border-grey-300 mb-5 mt-6 hover:border-slate-600 rounded transition duration-150 ease-in-out"
                 onClick={fetchMoreListing}
               >
                 Load more
