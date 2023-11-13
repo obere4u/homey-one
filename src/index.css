@@ -6,14 +6,24 @@
 /* tailwindcss have a plugin for forms */
 
 body {
-    background-color: #86ddec0c;
+  background-color: #86ddec0c;
 }
 
 .swiper-button-next:after,
 .swiper-button-prev:after {
-    color: #a8acad !important;
+  color: #a8acad !important;
 }
 
 .swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
-    background: #a8acad !important;
+  background: #a8acad !important;
 }
+
+/* hide scrollbar
+html {
+  scrollbar-width: none;
+} */
+
+/* hide scrollbar for browsers like chrome, safari etc
+html::-webkit-scrollbar {
+  display: none;
+} */
