@@ -43,7 +43,7 @@ export default function SaleListings() {
       }
     }
     fetchListing();
-  });
+  }, []);
   return (
     <div className="max-w-6xl mx-auto space-y- pt-4">
       {saleListing && saleListing.length > 0 && (
@@ -51,7 +51,7 @@ export default function SaleListings() {
           <h2 className="font-semibold text-2xl px-3 mt-3">House for Sale</h2>
           <Link to="categories/sale">
             <small className="text-sm text-blue-600 px-3 hover:text-blue-800 transition duration-150 ease-in-out">
-              Show more houses for sale
+              Show more places for sale
             </small>
           </Link>
           <ul className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xlg:grid-cols-4">

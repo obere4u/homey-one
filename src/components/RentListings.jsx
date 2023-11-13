@@ -44,7 +44,7 @@ export default function RentListings() {
       }
     }
     fetchListings();
-  });
+  }, []);
   return (
     <div className="max-w-6xl mx-auto pt-4 space-y-6">
       {rentListings && rentListings.length > 0 && (
@@ -52,7 +52,7 @@ export default function RentListings() {
           <h2 className="font-semibold text-2xl mt-3 px-3">House for Rents</h2>
           <Link to="/categories/rent">
             <small className="text-sm text-blue-600 px-3 hover:text-blue-700 transition duration-150 ease-in-out">
-              Show more houses for rent
+              Show more places for rent
             </small>
           </Link>
 
