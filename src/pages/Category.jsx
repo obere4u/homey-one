@@ -12,11 +12,13 @@ import { toast } from "react-toastify";
 import { db } from "../firebase";
 import Spinner from "../components/Spinner";
 import ListingItem from "../components/ListingItem";
+import { useParams } from "react-router-dom";
 
 export default function Offers() {
   const [offers, setOffers] = useState(null);
   const [loading, setLoading] = useState(true);
   const [lastFetchedListing, setLastFetchedListing] = useState(null);
+  const params = useParams();
 
   useEffect(() => {
     async function fetchListings() {
@@ -26,7 +28,7 @@ export default function Offers() {
         //create listingQuery
         const listingQuery = query(
           listingRef,
-          where("offer", "==", true),
+          where("type", "==", params.categoryName),
           limit(8),
           orderBy("timeStamp", "desc")
         );
@@ -53,7 +55,7 @@ export default function Offers() {
       }
     }
     fetchListings();
-  }, []);
+  }, [params.categoryName]);
 
   //Fetch more listings
   async function fetchMoreListing() {
@@ -63,7 +65,7 @@ export default function Offers() {
       //create listingQuery
       const listingQuery = query(
         listingRef,
-        where("offer", "==", true),
+        where("type", "==", params.categoryName),
         orderBy("timeStamp", "desc"),
         startAfter(lastFetchedListing),
         limit(4)
@@ -93,7 +95,7 @@ export default function Offers() {
 
   return (
     <div className="max-w-6xl mx-auto pt-4 space-y-6">
-      <h1 className="text-3xl font-bold text-center mt-4">Offers</h1>
+      <h1 className="text-3xl font-bold text-center mt-4">Places for {params.categoryName === "rent" ? "rent" : "Sale"}</h1>
       {loading ? (
         <Spinner />
       ) : offers && offers.length > 0 ? (
@@ -121,7 +123,7 @@ export default function Offers() {
           )}
         </>
       ) : (
-        <p className="text-xl text-center">There are currently no offers</p>
+            <p className="text-xl text-center">There are currently no place for {param.categoryName === "rent" ? "rent" : "sale"}</p>
       )}
     </div>
   );

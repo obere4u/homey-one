@@ -5,15 +5,14 @@ import Offers from "./pages/Offers";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import ForgotPassword from "./pages/ForgotPassword";
-import  PrivateRoute from "./components/PrivateRoute";
+import PrivateRoute from "./components/PrivateRoute";
 import Profile from "./pages/Profile";
 import CreateListing from "./pages/CreateListing";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditListing from "./pages/EditListing";
 import Listing from "./pages/Listing";
-
-
+import Category from "./pages/Category";
 
 function App() {
   return (
@@ -25,16 +24,19 @@ function App() {
             path="/"
             element={<Home />}
           />
+
+          {/* Profile Routes */}
           <Route
-            path="/profile"
+            path="/profile/*"
             element={<PrivateRoute />}
           >
             <Route
-              path="/profile"
+              index
               element={<Profile />}
             />
           </Route>
-          {/* secures the profile path */}
+
+          {/* Authentication Routes */}
           <Route
             path="/sign-in"
             element={<SignIn />}
@@ -43,32 +45,46 @@ function App() {
             path="/sign-up"
             element={<SignUp />}
           />
-
           <Route
             path="/forgot-password"
             element={<ForgotPassword />}
           />
+
+          {/* Other Routes */}
           <Route
             path="/offers"
             element={<Offers />}
           />
           <Route
+            path="/category/:categoryName"
+            element={<Category />}
+          />
+          <Route
             path="/category/:categoryName/:listingId"
             element={<Listing />}
           />
-          <Route path="/create-listing" element={<PrivateRoute />}>
+
+          {/* Create Listing Route */}
+          <Route
+            path="/create-listing/*"
+            element={<PrivateRoute />}
+          >
             <Route
-              path="/create-listing"
+              index
               element={<CreateListing />}
             />
           </Route>
-          <Route path="/edit-listing" element={<PrivateRoute />}>
+
+          {/* Edit Listing Route */}
+          <Route
+            path="/edit-listing/:listingId/*"
+            element={<PrivateRoute />}
+          >
             <Route
-              path="/edit-listing/:listingId"
+              index
               element={<EditListing />}
             />
           </Route>
-          {/* secures the create listing  path */}
         </Routes>
       </Router>
       <ToastContainer
@@ -87,4 +103,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

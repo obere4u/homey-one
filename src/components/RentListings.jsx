@@ -50,13 +50,13 @@ export default function RentListings() {
       {rentListings && rentListings.length > 0 && (
         <div className="m-2 mb-6">
           <h2 className="font-semibold text-2xl mt-3 px-3">House for Rents</h2>
-          <Link to="/categories/rent">
+          <Link to="/category/rent">
             <small className="text-sm text-blue-600 px-3 hover:text-blue-700 transition duration-150 ease-in-out">
               Show more places for rent
             </small>
           </Link>
 
-          <ul className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xlg:grid-cols-4">
+          <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xlg:grid-cols-4 2xl:grid-cols-4">
             {rentListings.map((listing) => (
               <div>
                 <ListingItem

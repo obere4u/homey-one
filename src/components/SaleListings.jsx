@@ -49,12 +49,12 @@ export default function SaleListings() {
       {saleListing && saleListing.length > 0 && (
         <div className="m-2 mb-6">
           <h2 className="font-semibold text-2xl px-3 mt-3">House for Sale</h2>
-          <Link to="categories/sale">
+          <Link to="category/sale">
             <small className="text-sm text-blue-600 px-3 hover:text-blue-800 transition duration-150 ease-in-out">
               Show more places for sale
             </small>
           </Link>
-          <ul className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xlg:grid-cols-4">
+          <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xlg:grid-cols-4 2xl:grid-cols-4">
             {saleListing.map((listing) => (
               <ListingItem
                 key={listing.id}

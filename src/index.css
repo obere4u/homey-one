@@ -17,13 +17,3 @@ body {
 .swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
   background: #a8acad !important;
 }
-
-/* hide scrollbar
-html {
-  scrollbar-width: none;
-} */
-
-/* hide scrollbar for browsers like chrome, safari etc
-html::-webkit-scrollbar {
-  display: none;
-} */
