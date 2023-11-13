@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import OAuth from "../components/OAuth";
-import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import { db } from "../firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false); //showPassword is a hook and we set the useState to false so that the password will be hidden by default
- 
-  
 
   const [formData, setFormData] = useState({
     //hook that will cover the username, email, password etc
@@ -59,32 +61,32 @@ export default function SignUp() {
   async function onSubmit(e) {
     e.preventDefault();
     if (name === "") {
-      toast.error("Please enter your name")
-      return
+      toast.error("Please enter your name");
+      return;
     }
-    //trycatch() is modern way of trowing and catching error
+    
     try {
       const auth = getAuth();
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
       updateProfile(auth.currentUser, {
-        displayName: name
-      })
-      const formDataCopy = {...formData};
+        displayName: name,
+      });
+      const formDataCopy = { ...formData };
       delete formDataCopy.password;
       formDataCopy.timestamp = serverTimestamp();
       await setDoc(doc(db, "users", user.uid), formDataCopy);
-      toast.success("Sign Up successful")
-      navigate("/"); 
+      toast.success("Sign Up successful");
+      navigate("/");
     } catch (error) {
       const errorMessageString = errorMessage(error);
       toast.error(errorMessageString);
-      
     }
-    
   }
-
-  
 
   return (
     <section>

@@ -92,8 +92,8 @@ export default function Offers() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto pt-4 space-y-6">
-      <h1 className="text-3xl font-bold text-center mt-4">Offers</h1>
+    <div className="max-w-6xl mx-auto">
+      <h1 className="text-3xl font-bold text-center mt-6 mb-4">Offers</h1>
       {loading ? (
         <Spinner />
       ) : offers && offers.length > 0 ? (
