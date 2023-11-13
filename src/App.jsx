@@ -67,24 +67,14 @@ function App() {
           {/* Create Listing Route */}
           <Route
             path="/create-listing/*"
-            element={<PrivateRoute />}
-          >
-            <Route
-              index
-              element={<CreateListing />}
-            />
-          </Route>
+            element={<PrivateRoute element={<CreateListing />} />}
+          />
 
           {/* Edit Listing Route */}
           <Route
             path="/edit-listing/:listingId/*"
-            element={<PrivateRoute />}
-          >
-            <Route
-              index
-              element={<EditListing />}
-            />
-          </Route>
+            element={<PrivateRoute element={<EditListing />} />}
+          />
         </Routes>
       </Router>
       <ToastContainer
