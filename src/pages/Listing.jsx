@@ -87,19 +87,20 @@ export default function Listing() {
               ></div>
             </SwiperSlide>
           ))}
+        <div
+          className="absolute top-[77%]  right-4 z-10 cursor-pointer border-2 border-gray-400 rounded-full w-10 h-10 flex justify-center items-center bg-white"
+          onClick={() => {
+            navigator.clipboard.writeText(window.location.href);
+            setShareLinkCopied(true);
+            setTimeout(() => {
+              setShareLinkCopied(false);
+            }, 2000);
+          }}
+        >
+          <FaShare className="text-lg text-slate-600" />
+        </div>
       </Swiper>
-      <div
-        className="fixed top-[14%] right-[3%] z-10 cursor-pointer border-2 border-gray-400 rounded-full w-12 h-12 flex justify-center items-center bg-white"
-        onClick={() => {
-          navigator.clipboard.writeText(window.location.href);
-          setShareLinkCopied(true);
-          setTimeout(() => {
-            setShareLinkCopied(false);
-          }, 2000);
-        }}
-      >
-        <FaShare className="text-lg text-slate-600" />
-      </div>
+
       {shareLinkCopied && (
         <span className="fixed top-[22%] right-[1%] text-white font-semibold z-10  bg-slate-500 rounded p-2">
           Link copied
@@ -107,8 +108,8 @@ export default function Listing() {
       )}
 
       <div className="m-4 flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg shadow-lg lg:space-x-5 md:space-x-5">
-        <div className="w-full">
-          <p className="text-2xl font-bold mb-3 text-blue-900">
+        <div className="w-full ">
+          <p className="text-xl md:text-2xl font-bold mb-3 text-blue-900">
             {/* adds coma after every 3 digits (.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")) */}
             {listing.name} - $
             {listing.offer ? formattedDiscountPrice : formattedRegularPrice}
@@ -118,11 +119,11 @@ export default function Listing() {
             <FaMapMarkerAlt className="text-green-700 mr-1" />
             {listing.address}
           </p>
-          <div className="flex justify-start items-center space-x-4 w-[75%]">
-            <p className="bg-red-800 w-full max-w-[200px] rounded-md p-1 text-white text-center font-semibold shadow-md">
+          <div className="flex justify-start items-center space-x-4 ">
+            <p className=" bg-red-800 w-full max-w-[200px] rounded-md p-1.5 text-white text-center font-semibold shadow-md">
               {listing.type === "rent" ? "Rent" : "Sale"}
             </p>
-            <p className="bg-green-800 w-full max-w-[200px] rounded-md p-1 text-white text-center font-semibold shadow-md">
+            <p className=" bg-green-800 w-full max-w-[300px] rounded-md p-1.5 text-white text-center font-semibold shadow-md">
               {listing.offer && <p>${discount} discount</p>}
             </p>
           </div>
@@ -130,7 +131,7 @@ export default function Listing() {
             <span className="font-semibold">Description - </span>
             {listing.description}
           </p>
-          <ul className="flex items-center space-x-2 sm:space-x-10 text-sm font-semibold">
+          <ul className="flex justify-between items-center text-sm font-semibold flex-wrap">
             <li className="flex items-center whitespace-nowrap">
               <FaBed className="text-lg mr-1" />
               {listing.bedrooms > 1 ? `${listing.bedrooms} Beds` : "1 Bed"}
@@ -143,7 +144,7 @@ export default function Listing() {
               <FaParking className="text-lg mr-1" />
               {listing.park ? "Parking Spot" : "No Parking"}
             </li>
-            <li className="flex items-center whitespace-nowrap">
+            <li className="flex items-center mt-3  whitespace-nowrap">
               <FaChair className="text-lg mr-1" />
               {listing.furnish ? "Furnished" : "Not Furnished"}
             </li>
@@ -170,7 +171,7 @@ export default function Listing() {
             center={[listing.geolocation.lat, listing.geolocation.long]}
             zoom={13}
             scrollWheelZoom={false}
-            style={{height:"100%", width: "100%"}}
+            style={{ height: "100%", width: "100%" }}
           >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -179,9 +180,7 @@ export default function Listing() {
             <Marker
               position={[listing.geolocation.lat, listing.geolocation.long]}
             >
-              <Popup>
-                {listing.address}
-              </Popup>
+              <Popup>{listing.address}</Popup>
             </Marker>
           </MapContainer>
         </div>

@@ -9,11 +9,16 @@ body {
   background-color: #86ddec0c;
 }
 
+/* Adjust the styles for the Swiper navigation arrows */
 .swiper-button-next:after,
 .swiper-button-prev:after {
-  color: #a8acad !important;
+  color: #1b1d1d !important;
+  font-size: 32px !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
 }
 
 .swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
   background: #a8acad !important;
 }
+
