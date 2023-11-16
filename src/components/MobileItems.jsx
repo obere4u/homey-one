@@ -5,6 +5,7 @@ import "../index.css";
 import { useLocation, useNavigate } from "react-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
+
 MobileItems.propTypes = {
   showMenu: PropTypes.func.isRequired,
   toggleMenu: PropTypes.bool.isRequired,

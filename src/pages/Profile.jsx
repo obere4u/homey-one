@@ -158,18 +158,13 @@ export default function Profile() {
               </p>
             </div>
           </form>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white uppercase px-7 py-3 text-small font-medium rounded-md shadow-md hover:bg-blue-700 transition ease-in-out duration:200ms ml-1 hover:shadow-lg active:bg-blue-800 cursor-pointer"
+          <Link
+            to="/create-listing"
+            className="w-full bg-blue-600 text-white uppercase px-7 py-3 text-small font-medium rounded-md shadow-md hover:bg-blue-700 transition ease-in-out duration:200ms ml-1 hover:shadow-lg active:bg-blue-800 cursor-pointer flex justify-center items-center"
           >
-            <Link
-              to="/create-listing"
-              className="flex justify-center items-center"
-            >
-              Sell or Rent Your Home{" "}
-              <FcHome className="text-3xl ml-3 bg-red-200 rounded-full border-2 p-1" />
-            </Link>
-          </button>
+            Sell or Rent Your Home
+            <FcHome className="text-3xl ml-3 bg-red-200 rounded-full border-2 p-1" />
+          </Link>
         </div>
       </section>
 
