@@ -49,12 +49,30 @@ export default function SaleListings() {
   return (
     <div className="max-w-6xl mx-auto space-y- pt-4">
       <div className="m-2 mb-6">
-        <h2 className="font-semibold text-2xl px-3 mt-3">House for Sale</h2>
-        <Link to="category/sale">
-          <small className="text-sm text-blue-600 px-3 hover:text-blue-800 transition duration-150 ease-in-out">
-            Show more places for sale
-          </small>
-        </Link>
+        {saleListing ? (
+          <h2 className="font-semibold text-2xl px-3 mt-3">House for Sale</h2>
+        ) : (
+          <div>
+            <Skeleton
+              height={30}
+              width={150}
+            />
+          </div>
+        )}
+        {saleListing ? (
+          <Link to="category/sale">
+            <small className="text-sm text-blue-600 px-3 hover:text-blue-800 transition duration-150 ease-in-out">
+              Show more places for sale
+            </small>
+          </Link>
+        ) : (
+          <div>
+            <Skeleton
+              height={30}
+              width={100}
+            />
+          </div>
+        )}
         <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xlg:grid-cols-4 2xl:grid-cols-4 gap-2">
           {saleListing
             ? saleListing.map((listing) => (
@@ -70,8 +88,7 @@ export default function SaleListings() {
                 <div key={index}>
                   <Skeleton height={300} />
                 </div>
-              ))
-            }
+              ))}
         </ul>
       </div>
     </div>

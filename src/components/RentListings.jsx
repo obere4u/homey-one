@@ -51,12 +51,30 @@ export default function RentListings() {
   return (
     <div className="max-w-6xl mx-auto pt-4 space-y-6">
       <div className="m-2 mb-6">
-        <h2 className="font-semibold text-2xl mt-3 px-3">House for Rents</h2>
-        <Link to="/category/rent">
-          <small className="text-sm text-blue-600 px-3 hover:text-blue-700 transition duration-150 ease-in-out">
-            Show more places for rent
-          </small>
-        </Link>
+        {rentListings ? (
+          <h2 className="font-semibold text-2xl mt-3 px-3">House for Rents</h2>
+        ) : (
+          <div>
+            <Skeleton
+              height={30}
+              width={150}
+            />
+          </div>
+        )}
+        {rentListings ? (
+          <Link to="/category/rent">
+            <small className="text-sm text-blue-600 px-3 hover:text-blue-700 transition duration-150 ease-in-out">
+              Show more places for rent
+            </small>
+          </Link>
+        ) : (
+          <div>
+            <Skeleton
+              height={30}
+              width={100}
+            />
+          </div>
+        )}
 
         <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xlg:grid-cols-4 2xl:grid-cols-4        gap-2">
           {rentListings

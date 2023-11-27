@@ -56,13 +56,32 @@ export default function OfferListings() {
   return (
     <div className="max-w-6xl mx-auto pt-4 space-y-6">
       <div className="m-2 mb-6">
-        <h2 className="font-semibold px-3 text-2xl mt-3">Recent Offers</h2>
+        {offerListings ? (
+          <h2 className="font-semibold px-3 text-2xl mt-3">Recent Offers</h2>
+        ) : (
+          <div>
+            <Skeleton
+              height={30}
+              width={150}
+            />
+          </div>
+        )}
 
-        <Link to="/offers">
-          <small className="text-sm text-blue-600 px-3 hover:text-light-blue-800 transition duration-150 ease-in-out">
-            Show more offers
-          </small>
-        </Link>
+        {offerListings ? (
+          <Link to="/offers">
+            <small className="text-sm text-blue-600 px-3 hover:text-light-blue-800 transition duration-150 ease-in-out">
+              Show more offers
+            </small>
+          </Link>
+        ) : (
+          <div>
+            <Skeleton
+              height={30}
+              width={100}
+            />
+          </div>
+        )}
+
         <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xlg:grid-cols-4 2xl:grid-cols-4        gap-2">
           {offerListings
             ? offerListings.map((listing) => (
