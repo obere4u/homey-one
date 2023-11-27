@@ -79,7 +79,7 @@ export default function Listing() {
           listing.imgUrls.map((url, index) => (
             <SwiperSlide key={index}>
               <div
-                className="relative w-full h-[300px] overflow-hidden"
+                className="relative  h-[300px] overflow-hidden"
                 style={{
                   background: `url(${url}) center no-repeat`,
                   backgroundSize: "cover",
@@ -123,9 +123,13 @@ export default function Listing() {
             <p className=" bg-red-800 w-full max-w-[200px] rounded-md p-1.5 text-white text-center font-semibold shadow-md">
               {listing.type === "rent" ? "Rent" : "Sale"}
             </p>
-            <p className=" bg-green-800 w-full max-w-[300px] rounded-md p-1.5 text-white text-center font-semibold shadow-md">
-              {listing.offer && <p>${discount} discount</p>}
-            </p>
+            {listing.type === "sale" &&
+              <p className=" bg-green-800 w-full max-w-[300px] rounded-md p-1.5 text-white text-center font-semibold shadow-md">
+                <p>
+                  ${discount} discount
+                </p>
+              </p>
+            }
           </div>
           <p className="my-3">
             <span className="font-semibold">Description - </span>
@@ -144,7 +148,7 @@ export default function Listing() {
               <FaParking className="text-lg mr-1" />
               {listing.park ? "Parking Spot" : "No Parking"}
             </li>
-            <li className="flex items-center mt-3  whitespace-nowrap">
+            <li className="flex items-center mt-3 md:mt-0  whitespace-nowrap">
               <FaChair className="text-lg mr-1" />
               {listing.furnish ? "Furnished" : "Not Furnished"}
             </li>

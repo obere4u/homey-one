@@ -12,6 +12,8 @@ import { toast } from "react-toastify";
 import { db } from "../firebase";
 import Spinner from "../components/Spinner";
 import ListingItem from "../components/ListingItem";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 export default function Offers() {
   const [offers, setOffers] = useState(null);
@@ -94,34 +96,47 @@ export default function Offers() {
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-3xl font-bold text-center mt-6 mb-4">Offers</h1>
-      {loading ? (
-        <Spinner />
-      ) : offers && offers.length > 0 ? (
-        <>
-          <main>
-            <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xlg:grid-cols-4 2xl:grid-cols-4">
-              {offers.map((offer) => (
-                <ListingItem
-                  key={offer.id}
-                  listing={offer.data}
-                  id={offer.id}
-                />
-              ))}
-            </ul>
-          </main>
-          {lastFetchedListing && (
-            <div className="flex justify-center items-center">
-              <button
-                className="bg-white px-3 py-1.5 text-grey-700 border border-grey-300 mb-5 mt-6 hover:border-slate-600 rounded transition duration-150 ease-in-out"
-                onClick={fetchMoreListing}
-              >
-                Load more
-              </button>
-            </div>
-          )}
-        </>
+      {offers ? (
+        offers.length > 0 ? (
+          <>
+            <main>
+              <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xlg:grid-cols-4 2xl:grid-cols-4">
+                {offers.map((offer) => (
+                  <ListingItem
+                    key={offer.id}
+                    listing={offer.data}
+                    id={offer.id}
+                  />
+                ))}
+              </ul>
+            </main>
+            {lastFetchedListing ? (
+              <div className="flex justify-center items-center">
+                <button
+                  className="bg-white px-3 py-1.5 text-grey-700 border border-grey-300 mb-5 mt-6 hover:border-slate-600 rounded transition duration-150 ease-in-out"
+                  onClick={fetchMoreListing}
+                >
+                  Load more
+                </button>
+              </div>
+            ) : (
+              <Skeleton
+                height={30}
+                width={50}
+              />
+            )}
+          </>
+        ) : (
+          <p className="text-xl text-center">There are currently no offers</p>
+        )
       ) : (
-        <p className="text-xl text-center">There are currently no offers</p>
+        Array.from({ length: 4 }, (_, index) => (
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xlg:grid-cols-4 2xl:grid-cols-4">
+            <div key={index}>
+              <Skeleton height={300} />
+            </div>
+          </div>
+        ))
       )}
     </div>
   );
