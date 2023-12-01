@@ -1,17 +1,18 @@
+import React, { useEffect, useState } from "react";
 import {
   collection,
   getDocs,
-  limit,
   orderBy,
   query,
   where,
+  limit,
 } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { Link } from "react-router-dom";
-import ListingItem from "./ListingItem";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import ListingItem from "./listingItem/ListingItem";
+import ListingItemSkeleton from "./listingItem/ListingItemSkeleton";
 
 export default function SaleListings() {
   const [saleListing, setSaleListing] = useState(null);
@@ -21,7 +22,6 @@ export default function SaleListings() {
       try {
         const listingsRef = collection(db, "listings");
 
-        //create listings Query
         const listingsQuery = query(
           listingsRef,
           where("type", "==", "sale"),
@@ -29,7 +29,6 @@ export default function SaleListings() {
           limit(4)
         );
 
-        //execute the listingsQuery
         const listingsQuerySnap = await getDocs(listingsQuery);
         const listings = [];
 
@@ -46,19 +45,12 @@ export default function SaleListings() {
     }
     fetchListing();
   }, []);
+
   return (
     <div className="max-w-6xl mx-auto space-y- pt-4">
       <div className="m-2 mb-6">
-        {saleListing ? (
-          <h2 className="font-semibold text-2xl px-3 mt-3">House for Sale</h2>
-        ) : (
-          <div>
-            <Skeleton
-              height={30}
-              width={150}
-            />
-          </div>
-        )}
+        <h2 className="font-semibold text-2xl px-3 mt-3">House for Sale</h2>
+
         {saleListing ? (
           <Link to="category/sale">
             <small className="text-sm text-blue-600 px-3 hover:text-blue-800 transition duration-150 ease-in-out">
@@ -66,10 +58,10 @@ export default function SaleListings() {
             </small>
           </Link>
         ) : (
-          <div>
+          <div className="ml-2">
             <Skeleton
-              height={30}
-              width={100}
+              height={20}
+              width={200}
             />
           </div>
         )}
@@ -85,8 +77,11 @@ export default function SaleListings() {
                 </div>
               ))
             : Array.from({ length: 4 }, (_, index) => (
-                <div key={index}>
-                  <Skeleton height={300} />
+                <div
+                  key={index}
+                  className="relative bg-white flex flex-col justify-between items-center shadow-md hover:shadow-xl rounded-md overflow-hidden transition-shadow duration-150 m-3"
+                >
+                  <ListingItemSkeleton />
                 </div>
               ))}
         </ul>

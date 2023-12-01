@@ -9,11 +9,12 @@ import {
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { db } from "../firebase";
-import Spinner from "../components/Spinner";
-import ListingItem from "../components/ListingItem";
+import { db } from "../../firebase";
+
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import ListingItem from "../../components/listingItem/ListingItem";
+import ListingItemSkeleton from "../../components/listingItem/ListingItemSkeleton";
 
 export default function Offers() {
   const [offers, setOffers] = useState(null);
@@ -104,16 +105,8 @@ export default function Offers() {
   return (
     <div className="max-w-6xl mx-auto space-y- pt-4">
       <div className="m-2 mb-6">
-        {offers ? (
-          <h2 className="font-semibold text-2xl px-3 mt-3">House for Sale</h2>
-        ) : (
-          <div>
-            <Skeleton
-              height={30}
-              width={100}
-            />
-          </div>
-        )}
+        <h2 className="font-semibold text-2xl px-3 mt-3">House for Sale</h2>
+
         <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xlg:grid-cols-4 2xl:grid-cols-4 gap-2">
           {offers
             ? offers.map((listing) => (
@@ -125,11 +118,7 @@ export default function Offers() {
                   />
                 </div>
               ))
-            : Array.from({ length: 4 }, (_, index) => (
-                <div key={index}>
-                  <Skeleton height={300} />
-                </div>
-              ))}
+            : Array.from({ length: 4 }, (_, index) => <ListingItemSkeleton />)}
         </ul>
         {lastFetchedListing && lastFetchedListing.length > 0 && (
           <div className="flex justify-center items-center">

@@ -9,9 +9,11 @@ import {
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { Link } from "react-router-dom";
-import ListingItem from "./ListingItem";
+
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import ListingItem from "./listingItem/ListingItem";
+import ListingItemSkeleton from "./listingItem/ListingItemSkeleton";
 
 export default function RentListings() {
   const [rentListings, setRentListings] = useState(null);
@@ -51,16 +53,8 @@ export default function RentListings() {
   return (
     <div className="max-w-6xl mx-auto pt-4 space-y-6">
       <div className="m-2 mb-6">
-        {rentListings ? (
-          <h2 className="font-semibold text-2xl mt-3 px-3">House for Rents</h2>
-        ) : (
-          <div>
-            <Skeleton
-              height={30}
-              width={150}
-            />
-          </div>
-        )}
+        <h2 className="font-semibold text-2xl mt-3 px-3">House for Rents</h2>
+
         {rentListings ? (
           <Link to="/category/rent">
             <small className="text-sm text-blue-600 px-3 hover:text-blue-700 transition duration-150 ease-in-out">
@@ -68,15 +62,15 @@ export default function RentListings() {
             </small>
           </Link>
         ) : (
-          <div>
+          <div className="ml-2">
             <Skeleton
-              height={30}
-              width={100}
+              height={20}
+              width={200}
             />
           </div>
         )}
 
-        <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xlg:grid-cols-4 2xl:grid-cols-4        gap-2">
+        <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xlg:grid-cols-4 2xl:grid-cols-4 gap-2">
           {rentListings
             ? rentListings.map((listing) => (
                 <div key={listing.id}>
@@ -88,8 +82,11 @@ export default function RentListings() {
                 </div>
               ))
             : Array.from({ length: 4 }, (_, index) => (
-                <div key={index}>
-                  <Skeleton height={300} />
+                <div
+                  key={index}
+                  className="relative bg-white flex flex-col justify-between items-center shadow-md hover:shadow-xl rounded-md overflow-hidden transition-shadow duration-150 m-3"
+                >
+                  <ListingItemSkeleton />
                 </div>
               ))}
         </ul>

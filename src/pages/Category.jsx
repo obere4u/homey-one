@@ -11,8 +11,8 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { db } from "../firebase";
 import Spinner from "../components/Spinner";
-import ListingItem from "../components/ListingItem";
 import { useParams } from "react-router-dom";
+import ListingItem from "../components/listingItem/ListingItem";
 
 export default function Offers() {
   const [offers, setOffers] = useState(null);
@@ -95,7 +95,9 @@ export default function Offers() {
 
   return (
     <div className="max-w-6xl mx-auto pt-4 space-y-6">
-      <h1 className="text-3xl font-bold text-center mt-4">Places for {params.categoryName === "rent" ? "rent" : "Sale"}</h1>
+      <h1 className="text-3xl font-bold text-center mt-4">
+        Places for {params.categoryName === "rent" ? "rent" : "Sale"}
+      </h1>
       {loading ? (
         <Spinner />
       ) : offers && offers.length > 0 ? (
@@ -123,7 +125,10 @@ export default function Offers() {
           )}
         </>
       ) : (
-            <p className="text-xl text-center">There are currently no place for {param.categoryName === "rent" ? "rent" : "sale"}</p>
+        <p className="text-xl text-center">
+          There are currently no place for{" "}
+          {param.categoryName === "rent" ? "rent" : "sale"}
+        </p>
       )}
     </div>
   );

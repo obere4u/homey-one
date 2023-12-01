@@ -15,14 +15,14 @@ import {
 import { db } from "../firebase";
 import { toast } from "react-toastify";
 import { FcHome } from "react-icons/fc";
-import ListingItem from "../components/ListingItem";
+import ListingItem from "../components/listingItem/ListingItem";
+import ListingItemSkeleton from "../components/listingItem/ListingItemSkeleton";
 
 export default function Profile() {
   const auth = getAuth();
   const navigate = useNavigate();
   const [changeDetails, setChangeDetails] = useState(false);
   const [listings, setListings] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: auth.currentUser?.displayName || "",
     email: auth.currentUser?.email || "",
@@ -85,7 +85,6 @@ export default function Profile() {
           });
         });
         setListings(listings);
-        setLoading(false);
       } catch (error) {
         toast.error("Error fetching listings");
       }
@@ -133,7 +132,7 @@ export default function Profile() {
               id="email"
               value={email}
               className={`w-full px-4 py-2 text-xl text-grey-700 bg-white border border-gray-300 rounded transition ease-in-out mb-6 ${
-                changeDetails && "!bg-green-100 !border-green"
+                changeDetails && "!bg-stone-500 "
               }`}
               disabled={!changeDetails}
             />
@@ -169,24 +168,29 @@ export default function Profile() {
       </section>
 
       <div className="max-w-6xl px-3 mt-6 mx-auto">
-        {!loading && listings.length > 0 && (
-          <>
-            <h2 className="text-2xl text-center font-semibold">My Listings</h2>
-            <ul className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 my-6">
-              {listings.map((listing) => {
-                return (
+        <h2 className="text-2xl text-center font-semibold">My Listings</h2>
+        <ul className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 my-6">
+          {listings
+            ? listings.map((listing) => (
+                <div key={listing.id}>
                   <ListingItem
                     key={listing.id}
-                    id={listing.id}
                     listing={listing.data}
+                    id={listing.id}
                     onDelete={() => onDelete(listing.id)}
                     onEdit={() => onEdit(listing.id)}
                   />
-                );
-              })}
-            </ul>
-          </>
-        )}
+                </div>
+              ))
+            : Array.from({ length: 4 }, (_, index) => (
+                <div
+                  key={index}
+                  className="relative bg-white flex flex-col justify-between items-center shadow-md hover:shadow-xl rounded-md overflow-hidden transition-shadow duration-150 m-3"
+                >
+                  <ListingItemSkeleton />
+                </div>
+              ))}
+        </ul>
       </div>
     </>
   );

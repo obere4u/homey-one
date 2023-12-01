@@ -7,13 +7,15 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { Link } from "react-router-dom";
-import ListingItem from "../components/ListingItem";
+
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import ListingItem from "../listingItem/ListingItem";
+import ListingItemSkeleton from "../listingItem/ListingItemSkeleton";
 
-export default function OfferListings() {
+export default function OfferListings({}) {
   const [offerListings, setOfferListings] = useState(null);
 
   useEffect(() => {
@@ -56,16 +58,7 @@ export default function OfferListings() {
   return (
     <div className="max-w-6xl mx-auto pt-4 space-y-6">
       <div className="m-2 mb-6">
-        {offerListings ? (
-          <h2 className="font-semibold px-3 text-2xl mt-3">Recent Offers</h2>
-        ) : (
-          <div>
-            <Skeleton
-              height={30}
-              width={150}
-            />
-          </div>
-        )}
+        <h2 className="font-semibold px-3 text-2xl mt-3">Recent Offers</h2>
 
         {offerListings ? (
           <Link to="/offers">
@@ -74,10 +67,10 @@ export default function OfferListings() {
             </small>
           </Link>
         ) : (
-          <div>
+          <div className="ml-2">
             <Skeleton
-              height={30}
-              width={100}
+              height={20}
+              width={200}
             />
           </div>
         )}
@@ -94,8 +87,11 @@ export default function OfferListings() {
                 </div>
               ))
             : Array.from({ length: 4 }, (_, index) => (
-                <div key={index}>
-                  <Skeleton height={300} />
+                <div
+                  key={index}
+                  className="relative bg-white flex flex-col justify-between items-center shadow-md hover:shadow-xl rounded-md overflow-hidden transition-shadow duration-150 m-3"
+                >
+                  <ListingItemSkeleton />
                 </div>
               ))}
         </ul>
