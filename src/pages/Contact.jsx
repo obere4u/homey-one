@@ -24,7 +24,8 @@ export default function Contact({ userRef }) {
     }
     getOwner();
   }, [userRef]);
-  
+
+  //listing
   useEffect(() => {
     async function fetchListing() {
       const docRef = doc(db, "listings", params.listingId);
@@ -36,20 +37,21 @@ export default function Contact({ userRef }) {
     }
     fetchListing();
   }, [params.listingId]);
-  
+
   function onChange(e) {
     setMessage(e.target.value);
-    
   }
 
+  console.log(listing);
   return (
     <>
       {owner !== null && (
         <div className="flex flex-col w-full">
-          <p className="mt-6 mb-3">
-            Contact <span className="font-semibold">{owner.name} </span>for{" "}
-            <span className="font-semibold">{listing.name}</span>
-          </p>
+          <div className="mt-6 mb-3">
+            Contact
+            <span className="font-semibold mx-1">{owner.name}</span>for
+            <span className="font-semibold mx-1">{listing?.name}</span>
+          </div>
           <div>
             <textarea
               name="message"
@@ -61,10 +63,14 @@ export default function Contact({ userRef }) {
           </div>
 
           <a
-            href={`mailto:${owner.email}?Subject=${listing.name}&body${message}`}
+            href={`mailto:${owner.email}?Subject=${listing?.name}&body${message}`}
           >
-            
-            <button type="button" className="w-full center px-7 py-3 mt-3 bg-blue-600 text-white rounded text-small uppercase shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Send Message</button>
+            <button
+              type="button"
+              className="w-full center px-7 py-3 mt-3 bg-blue-600 text-white rounded text-small uppercase shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+            >
+              Send Message
+            </button>
           </a>
         </div>
       )}

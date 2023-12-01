@@ -34,9 +34,9 @@ export default function ListingDetails({
           ${formattedRegularPrice}
           {type === "rent" ? " / Month" : ""}
           {offer ? (
-            <span className=" line-through text-sm ml-3">
+            <div className=" line-through text-sm md:ml-3">
               ${discount} discount
-            </span>
+            </div>
           ) : (
             ""
           )}
