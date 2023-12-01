@@ -3,8 +3,6 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 export default function ListingItemSkeleton({regularPrice, listing}) {
-  console.log('regularPrice:', regularPrice);
-  console.log('listing:', listing);
   
   return (
     <div className="w-full  flex flex-col  rounded-lg shadow-lg pb-2">
