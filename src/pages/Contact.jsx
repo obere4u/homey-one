@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
 
-export default function Contact({ userRef, listing }) {
+export default function Contact({ userRef }) {
   const [owner, setOwner] = useState(null);
   const [message, setMessage] = useState("");
+  const [listing, setListing] = useState(null);
   useEffect(() => {
     async function getOwner() {
       if (userRef) {
@@ -12,6 +13,7 @@ export default function Contact({ userRef, listing }) {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setOwner(docSnap.data());
+          setListing(docSnap.data());
         } else {
           toast.error("Could not get owner details");
         }
@@ -20,9 +22,10 @@ export default function Contact({ userRef, listing }) {
 
     getOwner();
   }, [userRef]);
-
-  function onChange() {
+  
+  function onChange(e) {
     setMessage(e.target.value);
+    
   }
 
   return (
