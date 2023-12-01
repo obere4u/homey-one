@@ -7,7 +7,7 @@ export default function ListingItemSkeleton({regularPrice, listing}) {
   console.log('listing:', listing);
   
   return (
-    <div className="w-full  flex flex-col  rounded-lg shadow-lg">
+    <div className="w-full  flex flex-col  rounded-lg shadow-lg pb-2">
       {/* Listing Image skeleton */}
       <Skeleton height={170} />
 
