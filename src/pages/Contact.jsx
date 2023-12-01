@@ -42,7 +42,6 @@ export default function Contact({ userRef }) {
     setMessage(e.target.value);
   }
 
-  console.log(listing);
   return (
     <>
       {owner !== null && (
