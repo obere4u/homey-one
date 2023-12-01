@@ -5,8 +5,8 @@ import "react-loading-skeleton/dist/skeleton.css";
 export default function ListingDetailsSkeleton() {
 
   return (
-    <div className="w-full rounded-lg shadow-lg px-4 md:flex space-y-5 space-x-7">
-      <div className="w-full">
+    <div className="w-full rounded-lg shadow-lg px-4 md:flex space-y-5 md:space-x-7">
+      <div className="w-full border border-red-600">
         {/* Listing Name skeleton */}
         <Skeleton height={50} />
 
@@ -31,7 +31,7 @@ export default function ListingDetailsSkeleton() {
         <Skeleton height={50} />
 
         {/* Listing features skeleton */}
-        <div className="flex space-x-3 items-enter mt-4">
+        <div className="grid grid-cols-3 lg:grid-cols-4 xlg:grid-cols-4 2xl:grid-cols-4 gap-2">
           <div className="w-full">
             <Skeleton height={20} />
           </div>
@@ -47,8 +47,6 @@ export default function ListingDetailsSkeleton() {
           <div className="w-full">
             <Skeleton height={20} />
           </div>
-
-          
         </div>
 
         {/*Conditionally check if not user, display contact owner */}
