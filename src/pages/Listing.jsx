@@ -133,13 +133,11 @@ export default function Listing() {
             setContactOwner={setContactOwner}
           />
         ) : (
-          <ListingDetailsSkeleton
-            
-          />
+          <ListingDetailsSkeleton key={index} />
         )}
 
         {/* Map Details */}
-        <div className="h-[200px] md:h-[400px] w-full z-10 overflow-x-hidden mt-5 md:mt-0 border">
+        <div className="h-[200px] md:h-[400px] w-full z-10 overflow-x-hidden mt-5 md:mt-0 border ">
           <MapContainer
             center={[listing.geolocation.lat, listing.geolocation.long]}
             zoom={13}
