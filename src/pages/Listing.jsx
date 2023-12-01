@@ -45,6 +45,8 @@ export default function Listing() {
     navigator.clipboard.writeText(text);
   };
 
+  console.log(listing)
+
   if (!listing) {
     return (
       <div className="max-w-6xl mx-auto space-y-4">

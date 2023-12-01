@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { useParams } from "react-router";
 
 export default function Contact({ userRef }) {
   const [owner, setOwner] = useState(null);
   const [message, setMessage] = useState("");
   const [listing, setListing] = useState(null);
+
+  const params = useParams();
+
   useEffect(() => {
     async function getOwner() {
       if (userRef) {
@@ -13,15 +17,25 @@ export default function Contact({ userRef }) {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setOwner(docSnap.data());
-          setListing(docSnap.data());
         } else {
           toast.error("Could not get owner details");
         }
       }
     }
-
     getOwner();
   }, [userRef]);
+  
+  useEffect(() => {
+    async function fetchListing() {
+      const docRef = doc(db, "listings", params.listingId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setListing(docSnap.data());
+      }
+    }
+    fetchListing();
+  }, [params.listingId]);
   
   function onChange(e) {
     setMessage(e.target.value);
